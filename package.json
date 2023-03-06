@@ -20,6 +20,10 @@
   },
   "homepage": "https://github.com/ridham-007/NDT-Quality-admin-fe-service#readme",
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/material": "^5.11.11",
+    "@mui/styled-engine-sc": "^5.11.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.1",
