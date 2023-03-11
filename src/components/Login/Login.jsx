@@ -16,21 +16,21 @@ import LoginBackground from '../../assets/images/LoginBackground.jpg';
 export default function Login() {
 
     const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
+        const user = { email, age: '30' };
 
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const userString = JSON.stringify(user);
+        localStorage.setItem("user", userString);
+
         navigate("/dashboard");
-
     };
 
     return (
-        <LoginWrapper>
+        <LoginWrapper >
             <DetailsContainer>
                 <DetailsWrapper>
                     <Typography component="h1" variant="h4" marginBottom="30px">
@@ -39,7 +39,7 @@ export default function Login() {
                     <Typography component="h1" variant="h5" fontSize="15px" color="#A6A3A3">
                         Welcome back Please Enter your Details
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box noValidate sx={{ mt: 1 }}>
                         <Typography variant="h6" align="left" fontSize="15px" color="#615D77">
                             Email Address
                         </Typography>
@@ -52,7 +52,10 @@ export default function Login() {
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            value={email}
                             size="small"
+                            onChange={(e) => setEmail(e.target.value)}
+
                         />
                         <Typography variant="h6" align="left" fontSize="15px" color="#615D77">
                             Password
@@ -67,6 +70,8 @@ export default function Login() {
                             id="password"
                             autoComplete="current-password"
                             size="small"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                         <Grid container>
                             <Grid item>
@@ -81,6 +86,7 @@ export default function Login() {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            onClick={handleSubmit}
                             style={{ borderRadius: "50px", color: "#ffffff", backgroundColor: "#34609B" }}
                         >
                             Log In
@@ -92,5 +98,6 @@ export default function Login() {
                 <ImageContainer src={LoginBackground}>
                 </ImageContainer></ImageWrapper>
         </LoginWrapper >
-    )
+
+    );
 }

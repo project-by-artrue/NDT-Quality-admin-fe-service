@@ -29,6 +29,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from "react-router-dom";
 
 const style = {
     position: 'absolute',
@@ -121,7 +122,7 @@ export default function MainDrawer() {
     const [open, setOpen] = React.useState(false);
     const [openDialog, setOpenDialog] = React.useState(false);
     const fileInput = React.useRef();
-    const [fileinput, setFileInput] = React.useState('');
+    const navigate = useNavigate();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -138,6 +139,16 @@ export default function MainDrawer() {
     const handleDialogClose = () => {
         setOpenDialog(false);
     };
+
+    const handleSubmit = () => {
+
+        const userString = localStorage.getItem("user");
+        const user = JSON.parse(userString);
+        console.log(user.email);
+        localStorage.clear();
+
+        navigate("/");
+    }
 
     const IconsArray = [<DashboardIcon />, <AssessmentIcon />, <GroupIcon />, <SettingsSuggestIcon />]
 
@@ -173,7 +184,6 @@ export default function MainDrawer() {
                     ref={fileInput}
                     type="file"
                     style={{ display: 'none' }}
-                    onChange={fileinput}
                 />
             </Button>
         </Typography>
@@ -273,7 +283,7 @@ export default function MainDrawer() {
                                         justifyContent: 'center',
                                     }}
                                 >
-                                    {index % 2 === 0 ? <PersonIcon /> : <LogoutIcon />}
+                                    {index % 2 === 0 ? <PersonIcon /> : <LogoutIcon onClick={handleSubmit} />}
                                 </ListItemIcon>
                                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
                             </ListItemButton>
