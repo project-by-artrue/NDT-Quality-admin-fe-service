@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -23,10 +22,26 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import PersonIcon from '@mui/icons-material/Person';
 import DataTable from '../DataTable/DataTable';
-import Button from '@mui/material/Button';
 import { CreateButton, HeaderWrapper } from './MainDrawer.styles';
 import SearchBar from '../SearchBar/SearchBar';
+import DialogBox from '../DialogBox/DialogBox';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import { TextField } from '@mui/material';
 
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 600,
+    bgcolor: 'background.paper',
+    boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+    p: 4,
+    display: "flex",
+    flexDirection: "column",
+    borderRadius: "2%",
+};
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -100,9 +115,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-export default function MiniDrawer() {
+export default function MainDrawer() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const fileInput = React.useRef();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -112,7 +129,71 @@ export default function MiniDrawer() {
         setOpen(false);
     };
 
+    const handleDialogOpen = () => {
+        setOpenDialog(true);
+    };
+
+    const handleDialogClose = () => {
+        setOpenDialog(false);
+    };
+
     const IconsArray = [<DashboardIcon />, <AssessmentIcon />, <GroupIcon />, <SettingsSuggestIcon />]
+
+    const modalContent = <Box sx={style}>
+        <Typography variant="h6" component="h2" style={{ color: "#163356", fontSize: '22px', fontWeight: '500px' }}>
+            Assignment
+        </Typography>
+        <hr />
+        <Typography sx={{ mt: 2 }}>
+            Assignment Title
+        </Typography>
+        <TextField
+            margin="normal"
+            fullWidth
+            id="title"
+            label="Enter Title"
+            autoFocus
+            size="small"
+        />
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Assignment csv
+            <Button
+                variant="contained"
+                color="grey"
+                onClick={() => fileInput.current.click()}
+                style={{ marginLeft: "15px" }}
+            >
+                upload
+            </Button>
+            <input
+                ref={fileInput}
+                type="file"
+                style={{ display: 'none', marginLeft: "10px" }}
+            />
+        </Typography>
+        <Typography sx={{ mt: 2 }}>
+            Extra Document
+            <Button
+                variant="contained"
+                color="grey"
+                onClick={() => fileInput.current.click()}
+                style={{ marginLeft: "15px" }}
+            >
+                upload
+            </Button>
+            <input
+                ref={fileInput}
+                type="file"
+                style={{ display: 'none', marginLeft: "10px" }}
+            />
+        </Typography>
+        <Button variant="contained"
+            color="primary"
+            onClick={handleDialogClose}
+            style={{ alignSelf: "end" }}
+        >
+            Close</Button>
+    </Box>
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -198,8 +279,9 @@ export default function MiniDrawer() {
                 <DrawerHeader />
                 <HeaderWrapper>
                     Assessments List
-                    <Button className="create-button" variant="contained">Create Assessment</Button>
+                    <Button className="create-button" variant="contained" onClick={handleDialogOpen} >Create Assessment</Button>
                 </HeaderWrapper>
+                <DialogBox open={openDialog} onClose={handleDialogClose} content={modalContent} />
                 <CreateButton>
                     <SearchBar />
                 </CreateButton>
@@ -207,4 +289,4 @@ export default function MiniDrawer() {
             </Box>
         </Box>
     );
-}
+} 

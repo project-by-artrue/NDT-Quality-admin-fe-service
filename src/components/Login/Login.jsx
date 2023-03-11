@@ -1,26 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import { useNavigate } from "react-router-dom";
 import {
     LoginWrapper, DetailsContainer, DetailsWrapper, DetailsHead, ImageContainer, ImageWrapper
 } from "./Login.styles";
 import LoginBackground from '../../assets/images/LoginBackground.jpg';
 
+
 export default function Login() {
+
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+
         console.log({
             email: data.get('email'),
             password: data.get('password'),
         });
+        navigate("/dashboard");
+
     };
 
     return (
