@@ -22,12 +22,13 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import PersonIcon from '@mui/icons-material/Person';
 import DataTable from '../DataTable/DataTable';
-import { CreateButton, HeaderWrapper } from './MainDrawer.styles';
+import { CreateButton, HeaderWrapper, BottomLine, ModelHeader } from './MainDrawer.styles';
 import SearchBar from '../SearchBar/SearchBar';
 import DialogBox from '../DialogBox/DialogBox';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { TextField } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const style = {
     position: 'absolute',
@@ -120,6 +121,7 @@ export default function MainDrawer() {
     const [open, setOpen] = React.useState(false);
     const [openDialog, setOpenDialog] = React.useState(false);
     const fileInput = React.useRef();
+    const [fileinput, setFileInput] = React.useState('');
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -140,11 +142,14 @@ export default function MainDrawer() {
     const IconsArray = [<DashboardIcon />, <AssessmentIcon />, <GroupIcon />, <SettingsSuggestIcon />]
 
     const modalContent = <Box sx={style}>
-        <Typography variant="h6" component="h2" style={{ color: "#163356", fontSize: '22px', fontWeight: '500px' }}>
-            Assignment
-        </Typography>
-        <hr />
-        <Typography sx={{ mt: 2 }}>
+        <ModelHeader>
+            <Typography variant="h6" component="h2" style={{ color: "#163356", fontSize: '22px', fontWeight: '600' }}>
+                Assignment
+            </Typography>
+            <CloseIcon onClick={handleDialogClose} style={{ cursor: 'pointer' }} />
+        </ModelHeader>
+        <BottomLine />
+        <Typography sx={{ mt: 2 }} style={{ color: "#000000", fontWeight: "600", fontSize: '14px' }}>
             Assignment Title
         </Typography>
         <TextField
@@ -155,44 +160,45 @@ export default function MainDrawer() {
             autoFocus
             size="small"
         />
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }} style={{ color: "#000000", fontWeight: "600", fontSize: '14px' }}>
             Assignment csv
             <Button
                 variant="contained"
                 color="grey"
                 onClick={() => fileInput.current.click()}
-                style={{ marginLeft: "15px" }}
+                style={{ marginLeft: "15px", color: "#000000", fontWeight: "600", fontSize: '14px' }}
             >
                 upload
+                <input
+                    ref={fileInput}
+                    type="file"
+                    style={{ display: 'none' }}
+                    onChange={fileinput}
+                />
             </Button>
-            <input
-                ref={fileInput}
-                type="file"
-                style={{ display: 'none', marginLeft: "10px" }}
-            />
         </Typography>
-        <Typography sx={{ mt: 2 }}>
+
+        <Typography sx={{ mt: 2 }} style={{ color: "#000000", fontWeight: "600", fontSize: '14px' }}>
             Extra Document
             <Button
                 variant="contained"
                 color="grey"
                 onClick={() => fileInput.current.click()}
-                style={{ marginLeft: "15px" }}
+                style={{ marginLeft: "15px", color: "#000000", fontWeight: "600", fontSize: '14px' }}
             >
                 upload
             </Button>
             <input
                 ref={fileInput}
                 type="file"
-                style={{ display: 'none', marginLeft: "10px" }}
+                style={{ display: 'none' }}
             />
         </Typography>
         <Button variant="contained"
             color="primary"
-            onClick={handleDialogClose}
             style={{ alignSelf: "end" }}
         >
-            Close</Button>
+            Submit</Button>
     </Box>
 
     return (

@@ -32,7 +32,20 @@ const HeaderWrapper = styled.div`
     }
 `;
 
+const BottomLine = styled.div`
+    width: 100%;
+    height: 0.9px;
+    margin-top: 10px;
+    border: 1px solid #C4CFD4;
+`;
+
+const ModelHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+`;
 export {
     CreateButton,
     HeaderWrapper,
+    BottomLine,
+    ModelHeader,
 };
