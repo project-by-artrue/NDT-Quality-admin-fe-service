@@ -29,6 +29,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useEffect, useState } from "react";
+import { read } from 'xlsx';
+
 
 const style = {
     position: 'absolute',
@@ -119,8 +122,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function MainDrawer() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    // const [file, setFile] = useState(null);
     const [openDialog, setOpenDialog] = React.useState(false);
-    const fileInput = React.useRef();
+    const csvRef = React.useRef();
+    const docRef = React.useRef();
     const [fileinput, setFileInput] = React.useState('');
 
     const handleDrawerOpen = () => {
@@ -139,8 +144,80 @@ export default function MainDrawer() {
         setOpenDialog(false);
     };
 
-    const IconsArray = [<DashboardIcon />, <AssessmentIcon />, <GroupIcon />, <SettingsSuggestIcon />]
+    function readFile(file) {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
 
+            fileReader.onload = (event) => {
+                const data = event.target.result;
+                const workbook = read(data, { type: 'binary' });
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                const headers = {};
+                const rows = [];
+
+                for (const cell in worksheet) {
+                    if (cell[0] === '!') continue;
+                    const col = cell.substring(0, 1);
+                    const row = parseInt(cell.substring(1));
+                    const value = worksheet[cell].v;
+
+                    if (row === 1) {
+                        headers[col] = value;
+                        continue;
+                    }
+
+                    if (!rows[row]) rows[row] = {};
+                    rows[row][headers[col]] = value;
+                }
+
+                resolve(rows);
+            };
+
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+
+            fileReader.readAsBinaryString(file);
+        });
+    }
+
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        readFile(file)
+            .then((rows) => {
+                console.log(rows);
+
+                const questionsArray = [];
+                for (let i = 0; i < rows?.length; i++) {
+                    let optionsArray = [];
+                    const obj = rows[i];
+                    if (obj !== null && obj !== undefined && obj !== '' && obj !== {}) {
+                        for (let key in obj) {
+                            if (obj.hasOwnProperty(key)) {
+                                if (key.startsWith('option')) {
+                                    optionsArray.push(obj[key]);
+                                }
+                            }
+                        }
+                        questionsArray.push({
+                            options: optionsArray,
+                            questionInstruction: obj.questionInstruction,
+                            correctAnswer: obj.correctAnswer,
+                        })
+                    }
+                }
+                console.log({ questionsArray })
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
+
+    const IconsArray = [<DashboardIcon />, <AssessmentIcon />, <GroupIcon />, <SettingsSuggestIcon />]
+    // console.log({ file })
     const modalContent = <Box sx={style}>
         <ModelHeader>
             <Typography variant="h6" component="h2" style={{ color: "#163356", fontSize: '22px', fontWeight: '600' }}>
@@ -165,15 +242,15 @@ export default function MainDrawer() {
             <Button
                 variant="contained"
                 color="grey"
-                onClick={() => fileInput.current.click()}
+                onClick={() => csvRef.current.click()}
                 style={{ marginLeft: "15px", color: "#000000", fontWeight: "600", fontSize: '14px' }}
             >
                 upload
                 <input
-                    ref={fileInput}
+                    ref={csvRef}
                     type="file"
                     style={{ display: 'none' }}
-                    onChange={fileinput}
+                    onChange={handleFileSelect}
                 />
             </Button>
         </Typography>
@@ -183,15 +260,18 @@ export default function MainDrawer() {
             <Button
                 variant="contained"
                 color="grey"
-                onClick={() => fileInput.current.click()}
+                onClick={() => docRef.current.click()}
                 style={{ marginLeft: "15px", color: "#000000", fontWeight: "600", fontSize: '14px' }}
             >
                 upload
             </Button>
             <input
-                ref={fileInput}
+                ref={docRef}
                 type="file"
                 style={{ display: 'none' }}
+            // onChange={(e) => {
+            //     if (e?.target.files?.length) setFile(e?.target.files[0]);
+            // }}
             />
         </Typography>
         <Button variant="contained"
