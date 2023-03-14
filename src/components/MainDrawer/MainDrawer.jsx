@@ -32,8 +32,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import { read } from 'xlsx';
 import { useNavigate } from "react-router-dom";
-import { useMutation } from '@apollo/client';
-import { CREATE_ASSESSMENT } from '../../query';
+import { useMutation, useQuery } from '@apollo/client';
+import { CREATE_ASSESSMENT, LOAD_ASSESSMENTS } from '../../query';
 
 const style = {
     position: 'absolute',
@@ -135,16 +135,22 @@ export default function MainDrawer() {
     const [assessmentTitle, setAssessmentTitle] = React.useState("");
     const [assessmentNote, setAssessmentNote] = React.useState("");
     const [assessmentQuestion, setassessmentQuestion] = React.useState([]);
-    const [createAssessment, { data: assesmentData, error: assessmentError, isLoading}] = useMutation(CREATE_ASSESSMENT);
+    const [createAssessment, { data: createAssesmentData, error: createAssessmentError, isLoading}] = useMutation(CREATE_ASSESSMENT);
 
     useEffect(() => {
-        if(assesmentData || assessmentError){
+        if(createAssesmentData || createAssessmentError){
             setAssessmentTitle("");
             setassessmentQuestion([]);
             setAssessmentNote("");
         }
-    }, [assesmentData, assessmentError])
+    }, [createAssesmentData, createAssessmentError])
 
+    const {data:allAssessmentData, loading, error} = useQuery(LOAD_ASSESSMENTS);
+
+    useEffect(()=>{
+        console.log("Meet",{allAssessmentData});
+    },[allAssessmentData])
+ 
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -162,6 +168,9 @@ export default function MainDrawer() {
     };
 
     const handleDialogClose = () => {
+        setAssessmentTitle("");
+        setassessmentQuestion([]);
+        setAssessmentNote("");
         setOpenDialog(false);
     };
 
