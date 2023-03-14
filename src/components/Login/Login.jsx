@@ -13,25 +13,7 @@ import {
 import LoginBackground from '../../assets/images/LoginBackground.jpg';
 import {useQuery, gql} from '@apollo/client'
 
-const LOAD_QUESTION = gql`
-    query getQuestionsbyAssessmentId($assessmentId: String!){
-        getQuestionsbyAssessmentId(assessmentId: $assessmentId){
-        _id
-        }
-    }
-`;
-
 export default function Login() {
-
-    const { error, loading, data } = useQuery(LOAD_QUESTION, {
-      variables: {
-        assessmentId: "64017f91beb5f86f7212b6b6",
-      },
-    });
-
-    useEffect(()=>{
-        console.log("Meet",data);
-    },[data]);
 
     const navigate = useNavigate();
     const [email, setEmail] = useState('');

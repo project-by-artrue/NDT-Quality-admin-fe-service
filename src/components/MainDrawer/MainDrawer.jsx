@@ -32,6 +32,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import { read } from 'xlsx';
 import { useNavigate } from "react-router-dom";
+import { useMutation } from '@apollo/client';
+import { CREATE_ASSESSMENT } from '../../query';
 
 const style = {
     position: 'absolute',
@@ -130,6 +132,20 @@ export default function MainDrawer() {
     const fileInput = React.useRef();
     const navigate = useNavigate();
 
+    const [assessmentTitle, setAssessmentTitle] = React.useState("");
+    const [assessmentNote, setAssessmentNote] = React.useState("");
+    const [assessmentQuestion, setassessmentQuestion] = React.useState([]);
+    const [createAssessment, { data: assesmentData, error: assessmentError, isLoading}] = useMutation(CREATE_ASSESSMENT);
+
+    useEffect(() => {
+        if(assesmentData || assessmentError){
+            setAssessmentTitle("");
+            setassessmentQuestion([]);
+            setAssessmentNote("");
+        }
+    }, [assesmentData, assessmentError])
+
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -139,12 +155,23 @@ export default function MainDrawer() {
     };
 
     const handleDialogOpen = () => {
+        setAssessmentTitle("");
+        setassessmentQuestion([]);
+        setAssessmentNote("");
         setOpenDialog(true);
     };
 
     const handleDialogClose = () => {
         setOpenDialog(false);
     };
+
+    const handleSubmit = () => {
+        const userString = localStorage.getItem("user");
+        const user = JSON.parse(userString);
+        console.log(user.email);
+        localStorage.clear();
+        navigate("/");
+    }
 
     function readFile(file) {
         return new Promise((resolve, reject) => {
@@ -176,18 +203,6 @@ export default function MainDrawer() {
                 resolve(rows);
             };
 
-            const handleSubmit = () => {
-
-                const userString = localStorage.getItem("user");
-                const user = JSON.parse(userString);
-                console.log(user.email);
-                localStorage.clear();
-
-                navigate("/");
-            }
-
-            const IconsArray = [<DashboardIcon />, <AssessmentIcon />, <GroupIcon />, <SettingsSuggestIcon />]
-
             fileReader.onerror = (error) => {
                 reject(error);
             };
@@ -211,23 +226,57 @@ export default function MainDrawer() {
                         for (let key in obj) {
                             if (obj.hasOwnProperty(key)) {
                                 if (key.startsWith('option')) {
-                                    optionsArray.push(obj[key]);
+                                    optionsArray.push({value: obj[key],identifier: key});
                                 }
                             }
                         }
                         questionsArray.push({
-                            options: optionsArray,
-                            questionInstruction: obj.questionInstruction,
-                            correctAnswer: obj.correctAnswer,
-                        })
+                          question: obj.questionInstruction,
+                          options: optionsArray,
+                          marks: 5,
+                          answer: [{ identifier: obj.correctAnswer }],
+                        });
                     }
                 }
-                console.log({ questionsArray })
+                setassessmentQuestion(questionsArray);
             })
             .catch((error) => {
                 console.error(error);
             });
     }
+
+    function handleAssessmentTitleChange(event) {
+        setAssessmentTitle(event.target.value);
+    }
+
+    async function handleAssessmentCreate(){
+        if(assessmentTitle === ""){
+            alert("Assessment Name must not be empty");
+            return;
+        }
+        if(assessmentQuestion.length == 0){
+            alert("Assessment Question must be selected");
+            return;
+        }
+        await createAssessment({
+          variables: {
+            createAssessmentInput:{
+                name: assessmentTitle,
+                questions: assessmentQuestion,
+                notes: assessmentNote,
+                score: 30, 
+                totalQuestions: assessmentQuestion.length
+            }
+          },
+        });
+        console.log("created",{
+            name: assessmentTitle,
+            questions: assessmentQuestion,
+            notes: assessmentNote,
+            score: 30, 
+            totalQuestions: assessmentQuestion.length
+        });
+    } 
 
 
     const IconsArray = [<DashboardIcon />, <AssessmentIcon />, <GroupIcon />, <SettingsSuggestIcon />]
@@ -250,6 +299,8 @@ export default function MainDrawer() {
             label="Enter Title"
             autoFocus
             size="small"
+            value={assessmentTitle}
+            onChange={handleAssessmentTitleChange}
         />
         <Typography id="modal-modal-description" sx={{ mt: 2 }} style={{ color: "#000000", fontWeight: "600", fontSize: '14px' }}>
             Assignment csv
@@ -291,6 +342,7 @@ export default function MainDrawer() {
         <Button variant="contained"
             color="primary"
             style={{ alignSelf: "end" }}
+            onClick={handleAssessmentCreate}
         >
             Submit</Button>
     </Box>
