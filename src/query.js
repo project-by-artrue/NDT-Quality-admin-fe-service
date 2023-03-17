@@ -12,7 +12,12 @@ export const LOAD_QUESTION_BY_ASSESSMENT = gql`
 export const LOAD_ASSESSMENTS = gql`
   query getAllAssessments {
     getAllAssessments {
-      _id
+      _id 
+      name
+      notes
+      score
+      createdAt
+      totalQuestions
     }
   }
 `;
