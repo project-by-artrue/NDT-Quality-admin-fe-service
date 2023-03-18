@@ -8,26 +8,33 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useNavigate } from "react-router-dom";
 import {
-    LoginWrapper, DetailsContainer, DetailsWrapper, DetailsHead, ImageContainer, ImageWrapper
+    LoginWrapper, DetailsContainer, DetailsWrapper, ImageContainer, ImageWrapper
 } from "./Login.styles";
 import LoginBackground from '../../assets/images/LoginBackground.jpg';
-import {useQuery, gql} from '@apollo/client'
 
 export default function Login() {
 
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const Email = "admin";
+    const Password = "admin@123";
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const user = { email, age: '30' };
+    const handleSubmit = () => {
+        if (email == Email && password == Password) {
 
-        const userString = JSON.stringify(user);
-        localStorage.setItem("user", userString);
-
-        navigate("/dashboard");
+            const user = { email };
+            const userString = JSON.stringify(user);
+            localStorage.setItem("user", userString);
+            navigate("/dashboard");
+        }
     };
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            handleSubmit()
+        }
+    }
 
     return (
         <LoginWrapper >
@@ -41,14 +48,13 @@ export default function Login() {
                     </Typography>
                     <Box noValidate sx={{ mt: 1 }}>
                         <Typography variant="h6" align="left" fontSize="15px" color="#615D77">
-                            Email Address
+                            Email / Username
                         </Typography>
                         <TextField
                             margin="normal"
                             required
                             fullWidth
                             id="email"
-                            label="Email Address"
                             name="email"
                             autoComplete="email"
                             autoFocus
@@ -65,13 +71,13 @@ export default function Login() {
                             required
                             fullWidth
                             name="password"
-                            label="Password"
                             type="password"
                             id="password"
                             autoComplete="current-password"
                             size="small"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyPress={handleKeyPress}
                         />
                         <Grid container>
                             <Grid item>

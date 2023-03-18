@@ -121,7 +121,6 @@ export default function MainDrawer() {
         if (text == "Logout") {
             const userString = localStorage.getItem("user");
             const user = JSON.parse(userString);
-            console.log(user.email);
             localStorage.clear();
             navigate("/");
         }
