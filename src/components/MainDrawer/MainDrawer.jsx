@@ -25,20 +25,9 @@ import Box from '@mui/material/Box';
 import { useNavigate } from "react-router-dom";
 import AssessmentCreation from '../AssessmentCreation/AssessmentCreation';
 import Dashboard from '../Dashboard/Dashboard';
+import User from '../User/User';
+import SystemSetting from "../SystemSetting/SystemSetting"
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 600,
-    bgcolor: 'background.paper',
-    boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-    p: 4,
-    display: "flex",
-    flexDirection: "column",
-    borderRadius: "2%",
-};
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -116,7 +105,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function MainDrawer() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
-    const [option, setOption] = React.useState('Dashboard');
+    const [option, setOption] = React.useState('Assessment');
 
     const navigate = useNavigate();
 
@@ -128,12 +117,14 @@ export default function MainDrawer() {
         setOpen(false);
     };
 
-    const handleSubmit = () => {
-        const userString = localStorage.getItem("user");
-        const user = JSON.parse(userString);
-        console.log(user.email);
-        localStorage.clear();
-        navigate("/");
+    const handleSubmit = (text) => {
+        if (text == "Logout") {
+            const userString = localStorage.getItem("user");
+            const user = JSON.parse(userString);
+            console.log(user.email);
+            localStorage.clear();
+            navigate("/");
+        }
     }
 
     const IconsArray = [<DashboardIcon />, <AssessmentIcon />, <GroupIcon />, <SettingsSuggestIcon />]
@@ -202,7 +193,7 @@ export default function MainDrawer() {
                         <ListItem
                             key={text}
                             disablePadding sx={{ display: 'block' }}
-                            onClick={() => handleSubmit(text === 'Logout')}
+                            onClick={() => handleSubmit(text)}
                         >
                             <ListItemButton
                                 sx={{
@@ -235,8 +226,12 @@ export default function MainDrawer() {
                             return <Dashboard />
                         case 'Assessment':
                             return <AssessmentCreation />
+                        case 'Users':
+                            return <User />
+                        case 'System Settings':
+                            return <SystemSetting />
                         default:
-                            return <Dashboard />
+                            return <AssessmentCreation />
                     }
                 })()}
             </Box>

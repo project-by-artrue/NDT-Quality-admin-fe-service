@@ -16,6 +16,20 @@ import { CREATE_ASSESSMENT, LOAD_ASSESSMENTS } from '../../query';
 import { ModelHeader } from "../MainDrawer/MainDrawer.styles";
 
 
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 600,
+    bgcolor: 'background.paper',
+    boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+    p: 4,
+    display: "flex",
+    flexDirection: "column",
+    borderRadius: "2%",
+};
+
 export default function AssessmentCreation() {
 
     const [assessmentTitle, setAssessmentTitle] = React.useState("");
@@ -28,7 +42,7 @@ export default function AssessmentCreation() {
     const csvRef = React.useRef();
     const docRef = React.useRef();
 
-    const modalContent = <Box>
+    const modalContent = <Box sx={style}>
         <ModelHeader>
             <Typography variant="h6" component="h2" style={{ color: "#163356", fontSize: '22px', fontWeight: '600' }}>
                 Assignment

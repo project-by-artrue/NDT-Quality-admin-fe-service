@@ -9,15 +9,15 @@ export default function Dashboard() {
             <MainWrapper>
                 <LeftContent>
                     <LeftImg>NDT</LeftImg>
-                    <LeftItem>
+                    {/* <LeftItem>
                         {set.map((local, index) => (
                             <ul><li key={index}>{local}</li></ul>
                         ))}
-                    </LeftItem>
+                    </LeftItem> */}
                 </LeftContent>
-                <RightContent>
+                {/* <RightContent>
                     <h2>Hello2</h2>
-                </RightContent>
+                </RightContent> */}
             </MainWrapper>
         </>
     )
