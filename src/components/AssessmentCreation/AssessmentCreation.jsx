@@ -37,76 +37,11 @@ export default function AssessmentCreation() {
     const [assessmentQuestion, setassessmentQuestion] = React.useState([]);
     const [createAssessment, { data: createAssesmentData, error: createAssessmentError, isLoading }] = useMutation(CREATE_ASSESSMENT);
     const [assessments, setAssessments] = React.useState([]);
+    const { data: allAssessmentData, loading, error } = useQuery(LOAD_ASSESSMENTS);
 
     const [openDialog, setOpenDialog] = React.useState(false);
     const csvRef = React.useRef();
     const docRef = React.useRef();
-
-    const modalContent = <Box sx={style}>
-        <ModelHeader>
-            <Typography variant="h6" component="h2" style={{ color: "#163356", fontSize: '22px', fontWeight: '600' }}>
-                Assignment
-            </Typography>
-            <CloseIcon onClick={handleDialogClose} style={{ cursor: 'pointer' }} />
-        </ModelHeader>
-        <BottomLine />
-        <Typography sx={{ mt: 2 }} style={{ color: "#000000", fontWeight: "600", fontSize: '14px' }}>
-            Assignment Title
-        </Typography>
-        <TextField
-            margin="normal"
-            fullWidth
-            id="title"
-            label="Enter Title"
-            autoFocus
-            size="small"
-            value={assessmentTitle}
-            onChange={handleAssessmentTitleChange}
-        />
-        <Typography id="modal-modal-description" sx={{ mt: 2 }} style={{ color: "#000000", fontWeight: "600", fontSize: '14px' }}>
-            Assignment csv
-            <Button
-                variant="contained"
-                color="grey"
-                onClick={() => csvRef.current.click()}
-                style={{ marginLeft: "15px", color: "#000000", fontWeight: "600", fontSize: '14px' }}
-            >
-                upload
-                <input
-                    ref={csvRef}
-                    type="file"
-                    style={{ display: 'none' }}
-                    onChange={handleFileSelect}
-                />
-            </Button>
-        </Typography>
-
-        <Typography sx={{ mt: 2 }} style={{ color: "#000000", fontWeight: "600", fontSize: '14px' }}>
-            Extra Document
-            <Button
-                variant="contained"
-                color="grey"
-                onClick={() => docRef.current.click()}
-                style={{ marginLeft: "15px", color: "#000000", fontWeight: "600", fontSize: '14px' }}
-            >
-                upload
-            </Button>
-            <input
-                ref={docRef}
-                type="file"
-                style={{ display: 'none' }}
-            // onChange={(e) => {
-            //     if (e?.target.files?.length) setFile(e?.target.files[0]);
-            // }}
-            />
-        </Typography>
-        <Button variant="contained"
-            color="primary"
-            style={{ alignSelf: "end" }}
-            onClick={handleAssessmentCreate}
-        >
-            Submit</Button>
-    </Box>
 
     const handleDialogOpen = () => {
         setAssessmentTitle("");
@@ -218,13 +153,7 @@ export default function AssessmentCreation() {
                 }
             },
         });
-        console.log("created", {
-            name: assessmentTitle,
-            questions: assessmentQuestion,
-            notes: assessmentNote,
-            score: 30,
-            totalQuestions: assessmentQuestion.length
-        });
+        setOpenDialog(false);
     }
 
     const columns = [
@@ -283,8 +212,6 @@ export default function AssessmentCreation() {
         }
     }, [createAssesmentData, createAssessmentError])
 
-    const { data: allAssessmentData, loading, error } = useQuery(LOAD_ASSESSMENTS);
-
     useEffect(() => {
         const rows = [];
         allAssessmentData?.getAllAssessments.forEach((assessment) => {
@@ -294,7 +221,68 @@ export default function AssessmentCreation() {
         setAssessments(rows);
     }, [allAssessmentData])
 
+    const modalContent = <Box sx={style}>
+        <ModelHeader>
+            <Typography variant="h6" component="h2" style={{ color: "#163356", fontSize: '22px', fontWeight: '600' }}>
+                Assignment
+            </Typography>
+            <CloseIcon onClick={handleDialogClose} style={{ cursor: 'pointer' }} />
+        </ModelHeader>
+        <BottomLine />
+        <Typography sx={{ mt: 2 }} style={{ color: "#000000", fontWeight: "600", fontSize: '14px' }}>
+            Assignment Title
+        </Typography>
+        <TextField
+            margin="normal"
+            fullWidth
+            id="title"
+            label="Enter Title"
+            autoFocus
+            size="small"
+            value={assessmentTitle}
+            onChange={handleAssessmentTitleChange}
+        />
+        <Typography id="modal-modal-description" sx={{ mt: 2 }} style={{ color: "#000000", fontWeight: "600", fontSize: '14px' }}>
+            Assignment csv
+            <Button
+                variant="contained"
+                color="grey"
+                onClick={() => csvRef.current.click()}
+                style={{ marginLeft: "15px", color: "#000000", fontWeight: "600", fontSize: '14px' }}
+            >
+                upload
+                <input
+                    ref={csvRef}
+                    type="file"
+                    style={{ display: 'none' }}
+                    onChange={handleFileSelect}
+                />
+            </Button>
+        </Typography>
 
+        <Typography sx={{ mt: 2 }} style={{ color: "#000000", fontWeight: "600", fontSize: '14px' }}>
+            Extra Document
+            <Button
+                variant="contained"
+                color="grey"
+                onClick={() => docRef.current.click()}
+                style={{ marginLeft: "15px", color: "#000000", fontWeight: "600", fontSize: '14px' }}
+            >
+                upload
+            </Button>
+            <input
+                ref={docRef}
+                type="file"
+                style={{ display: 'none' }}
+            />
+        </Typography>
+        <Button variant="contained"
+            color="primary"
+            style={{ alignSelf: "end" }}
+            onClick={handleAssessmentCreate}
+        >
+            Submit</Button>
+    </Box>;
     return (
         <>
             <HeaderWrapper>
