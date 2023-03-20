@@ -4,6 +4,7 @@ import { CreateButton, HeaderWrapper, BottomLine } from '../AssessmentCreation/A
 import DialogBox from "../DialogBox/DialogBox";
 import SearchBar from "../SearchBar/SearchBar";
 import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { TextField } from '@mui/material';
@@ -14,7 +15,7 @@ import { read } from 'xlsx';
 import { useMutation, useQuery } from '@apollo/client';
 import { CREATE_ASSESSMENT, LOAD_ASSESSMENTS } from '../../query';
 import { ModelHeader } from "../MainDrawer/MainDrawer.styles";
-
+import MenuData from "../MenuData/Menudata";
 
 const style = {
     position: 'absolute',
@@ -34,6 +35,9 @@ export default function AssessmentCreation() {
 
     const [assessmentTitle, setAssessmentTitle] = React.useState("");
     const [assessmentNote, setAssessmentNote] = React.useState("");
+    const [price, setPrice] = React.useState(0);
+    const [live, setLive] = React.useState(false);
+    const [subscription, setSubscription] = React.useState(false);
     const [assessmentQuestion, setassessmentQuestion] = React.useState([]);
     const [createAssessment, { data: createAssesmentData, error: createAssessmentError, isLoading }] = useMutation(CREATE_ASSESSMENT);
     const [assessments, setAssessments] = React.useState([]);
@@ -133,6 +137,28 @@ export default function AssessmentCreation() {
         setAssessmentTitle(event.target.value);
     }
 
+    function handlePriceChange(event) {
+        setPrice(event.target.value);
+    }
+
+    function handleLiveChange(event) {
+        if (event == 'false') {
+            setLive(true);
+        }
+        else {
+            setLive(false);
+        }
+    }
+    function handleSubscriptionChange(event) {
+        if (event == 'false') {
+            setSubscription(true);
+        }
+        else {
+            setSubscription(false);
+        }
+
+    }
+
     async function handleAssessmentCreate() {
         if (assessmentTitle === "") {
             alert("Assessment Name must not be empty");
@@ -196,12 +222,10 @@ export default function AssessmentCreation() {
         const monthNames = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'August', 'Sept', 'Oct', 'Nov', 'Dec'];
         const monthName = monthNames[monthIndex];
         const day = date.getDay();
-
         const fullDate = `${day}, ${monthName}`;
+        const more = <MenuData />
 
-        const button = <Button variant="outlined" size="small" >Peview</Button>
-
-        return { name, id, score, totalquestion, createat: fullDate, action: button };
+        return { name, id, score, totalquestion, createat: fullDate, action: more };
     }
 
     useEffect(() => {
@@ -236,7 +260,6 @@ export default function AssessmentCreation() {
             margin="normal"
             fullWidth
             id="title"
-            label="Enter Title"
             autoFocus
             size="small"
             value={assessmentTitle}
@@ -276,6 +299,32 @@ export default function AssessmentCreation() {
                 style={{ display: 'none' }}
             />
         </Typography>
+
+        <Typography sx={{ mt: 2 }} style={{ color: "#000000", fontWeight: "600", fontSize: '14px' }}>
+            Price
+        </Typography>
+        <TextField
+            margin="normal"
+            id="price"
+            autoFocus
+            size="small"
+            value={price}
+            sx={{ width: "50%" }}
+            onChange={handlePriceChange}
+        />
+
+        <div style={{ display: "flex" }}>
+            <Typography sx={{ mt: 2 }} style={{ color: "#000000", fontWeight: "600", fontSize: '14px' }}>
+                Live
+                <Checkbox value={live} onChange={handleLiveChange} />
+            </Typography>
+
+            <Typography sx={{ mt: 2 }} style={{ color: "#000000", fontWeight: "600", fontSize: '14px', marginLeft: '40px' }}>
+                Subscription
+                <Checkbox value={subscription} onChange={handleSubscriptionChange} />
+            </Typography>
+        </div>
+
         <Button variant="contained"
             color="primary"
             style={{ alignSelf: "end" }}
