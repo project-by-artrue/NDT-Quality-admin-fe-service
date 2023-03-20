@@ -20,7 +20,6 @@ export default function MenuData() {
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
-        console.log("hello", event.currentTarget)
     };
 
     const handleClose = () => {
