@@ -215,6 +215,15 @@ export default function AssessmentCreation() {
         },
     ];
 
+    const optionList = [
+        {
+            name: "Review",
+        },
+        {
+            name: "Edit",
+        }
+    ];
+
     function createData(name, id, score, totalquestion, createat) {
 
         const date = new Date(createat); // create a new Date object with the date '2023-03-17'
@@ -223,7 +232,7 @@ export default function AssessmentCreation() {
         const monthName = monthNames[monthIndex];
         const day = date.getDay();
         const fullDate = `${day}, ${monthName}`;
-        const more = <MenuData />
+        const more = <MenuData optionList={optionList} />
 
         return { name, id, score, totalquestion, createat: fullDate, action: more };
     }

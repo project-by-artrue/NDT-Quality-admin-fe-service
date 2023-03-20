@@ -4,18 +4,11 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-export default function MenuData() {
+export default function MenuData(props) {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const optionList = [
-        {
-            name: "Review",
-        },
-        {
-            name: "Edit",
-        }
-    ];
+
     const open = Boolean(anchorEl);
 
     const handleClick = (event) => {
@@ -42,7 +35,7 @@ export default function MenuData() {
                 onClose={handleClose}
                 open={open}
             >
-                {optionList.map((option) => (
+                {props.optionList.map((option) => (
                     <MenuItem
                         key={option.name}
                         onClick={handleClose}
