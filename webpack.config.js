@@ -12,7 +12,7 @@ module.exports = {
     },
     // webpack 5 comes with devServer which loads in development mode
     devServer: {
-        port: 3010,
+        port: 5008,
         historyApiFallback: true,
     },
     resolve: {
