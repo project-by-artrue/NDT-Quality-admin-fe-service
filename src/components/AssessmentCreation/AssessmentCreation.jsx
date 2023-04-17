@@ -37,6 +37,7 @@ const style = {
 };
 
 export default function AssessmentCreation() {
+  const [totalScore, setTotalScore] = React.useState();
   const [assessmentTitle, setAssessmentTitle] = React.useState("");
   const [assessmentNote, setAssessmentNote] = React.useState("");
   const [price, setPrice] = React.useState(0);
@@ -48,6 +49,7 @@ export default function AssessmentCreation() {
     { data: createAssesmentData, error: createAssessmentError, isLoading },
   ] = useMutation(CREATE_ASSESSMENT);
   const [assessments, setAssessments] = React.useState([]);
+  console.log("🚀 ~ file: AssessmentCreation.jsx:52 ~ AssessmentCreation ~ assessments:", assessments)
   const {
     data: allAssessmentData,
     loading,
@@ -115,29 +117,30 @@ export default function AssessmentCreation() {
     if (!file) return;
     readFile(file)
       .then((rows) => {
-        console.log(rows);
-
+        var totalScore = 0;
         const questionsArray = [];
         for (let i = 0; i < rows?.length; i++) {
           let optionsArray = [];
           const obj = rows[i];
-          if (obj !== null && obj !== undefined && obj !== "" && obj !== {}) {
+          if (obj !== null && obj !== undefined && obj !== '' && obj !== {}) {
             for (let key in obj) {
               if (obj.hasOwnProperty(key)) {
-                if (key.startsWith("option")) {
+                if (key.startsWith('option')) {
                   optionsArray.push({ value: obj[key], identifier: key });
                 }
               }
             }
+            totalScore += Number(obj.mark);
             questionsArray.push({
               question: obj.questionInstruction,
               options: optionsArray,
-              marks: 5,
-              answer: [{ identifier: obj.correctAnswer }],
+              marks: obj.mark,
+              answer: [{ identifier: `${obj.correctAnswer}`.toLowerCase() }],
             });
           }
         }
         setassessmentQuestion(questionsArray);
+        setTotalScore(totalScore);
       })
       .catch((error) => {
         console.error(error);
@@ -175,11 +178,11 @@ export default function AssessmentCreation() {
       toast.error("Assessment Name must not be empty");
       return;
     }
-    if (assessmentQuestion.length == 0) {
+    if (assessmentQuestion.length === 0) {
       toast.error("Assessment Question must be selected");
       return;
     }
-    if (assessmentNote === "") {
+    if (assessmentNote.length === 0) {
       toast.error("Extra document filed must not be empty");
       return;
     }
@@ -189,12 +192,14 @@ export default function AssessmentCreation() {
           name: assessmentTitle,
           questions: assessmentQuestion,
           notes: assessmentNote,
-          score: 30,
+          score: totalScore,
           totalQuestions: assessmentQuestion.length,
-        },
+          assessmentFees: price,
+          isAssessmentFree: subscription
+        }
       },
     });
-    setOpenDialog(false);
+    handleDialogClose()
   }
 
   const columns = [
@@ -208,14 +213,14 @@ export default function AssessmentCreation() {
       format: (value) => value.toLocaleString("en-US"),
     },
     {
-      id: "totalquestion",
+      id: "totalQuestion",
       label: "Total Question",
       minWidth: 170,
       align: "right",
       format: (value) => value.toLocaleString("en-US"),
     },
     {
-      id: "createat",
+      id: "createAt",
       label: "Created At",
       minWidth: 170,
       align: "right",
@@ -239,29 +244,9 @@ export default function AssessmentCreation() {
     },
   ];
 
-  function createData(name, id, score, totalquestion, createat) {
-    const date = new Date(createat); // create a new Date object with the date '2023-03-17'
-    const monthIndex = date.getMonth(); // get the month index (0-11)
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "Sept",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    const monthName = monthNames[monthIndex];
-    const day = date.getDay();
-    const fullDate = `${day}, ${monthName}`;
+  function createData(name, id, score, totalQuestion, createAt) {
     const more = <MenuData optionList={optionList} />;
-
-    return { name, id, score, totalquestion, createat: fullDate, action: more };
+    return { name, id, score, totalQuestion, createAt, action: more };
   }
 
   useEffect(() => {
@@ -275,17 +260,26 @@ export default function AssessmentCreation() {
   useEffect(() => {
     const rows = [];
     allAssessmentData?.getAllAssessments.forEach((assessment) => {
+      const options = {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      };
+
+      const date = new Date(assessment.createdAt)
+      const formattedDate = date.toLocaleString('en-US', options);
+
       rows.push(
         createData(
           assessment.name,
           assessment._id,
           assessment.score,
           assessment.totalQuestions,
-          assessment.createdAt
+          formattedDate
         )
       );
     });
-
+    console.log("8520", rows);
     setAssessments(rows);
   }, [allAssessmentData]);
 
