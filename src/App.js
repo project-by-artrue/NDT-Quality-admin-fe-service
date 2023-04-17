@@ -2,8 +2,10 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Login from "./components/Login/Login";
+import { ToastContainer } from "react-toastify";
 import MainDrawer from "./components/MainDrawer/MainDrawer";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+ import 'react-toastify/dist/ReactToastify.css';
 
 const client = new ApolloClient({
   cache:new  InMemoryCache(),
@@ -11,6 +13,7 @@ const client = new ApolloClient({
 });
 const App = () => {
   return (
+    <>
     <ApolloProvider client={client}>
       <BrowserRouter>
         <Routes>
@@ -18,7 +21,9 @@ const App = () => {
           <Route path="/dashboard" exact element={<MainDrawer />} />
         </Routes>
       </BrowserRouter>
-    // </ApolloProvider>
+     </ApolloProvider>
+      <ToastContainer position="top-right"/>
+    </>
   );
 };
 
