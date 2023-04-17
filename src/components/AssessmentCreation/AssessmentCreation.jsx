@@ -151,7 +151,7 @@ export default function AssessmentCreation() {
   function handlePriceChange(event) {
     setPrice(event.target.value);
   }
-   function handleExtraDocChange(event) {
+  function handleExtraDocChange(event) {
     setAssessmentNote(event.target.value);
   }
 
@@ -183,7 +183,7 @@ export default function AssessmentCreation() {
       toast.error("Extra document filed must not be empty");
       return;
     }
-    await createAssessment({  
+    await createAssessment({
       variables: {
         createAssessmentInput: {
           name: assessmentTitle,
@@ -343,38 +343,38 @@ export default function AssessmentCreation() {
           />
         </Button>
       </Typography>
-          <div style={{display:"flex",alignItems: "center"}}>
-      <Typography
-        sx={{ mt: 2 }}
-        style={{ color: "#000000", fontWeight: "600", fontSize: "14px" }}
-      >
-        Extra Document
-      </Typography>
-      <TextField
-      sx={{ml:"15px"}}
-        margin="normal"
-        id="extra_doc"
-        size="small"
-        value={assessmentNote}
-        onChange={handleExtraDocChange}
-      />
-     </div>
-          <div style={{display:"flex",alignItems: "center"}}>
-      <Typography
-        sx={{ mt: 2 }}
-        style={{ color: "#000000", fontWeight: "600", fontSize: "14px" }}
-      >
-        Price
-      </Typography>
-      <TextField
-        margin="normal"
-        id="price"
-        size="small"
-        value={price}
-        sx={{ width: "50%",ml:"89px" }}
-        onChange={handlePriceChange}
-      />
-</div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Typography
+          sx={{ mt: 2 }}
+          style={{ color: "#000000", fontWeight: "600", fontSize: "14px" }}
+        >
+          Extra Document
+        </Typography>
+        <TextField
+          sx={{ width: "50%", ml: "15px" }}
+          margin="normal"
+          id="extra_doc"
+          size="small"
+          value={assessmentNote}
+          onChange={handleExtraDocChange}
+        />
+      </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Typography
+          sx={{ mt: 2 }}
+          style={{ color: "#000000", fontWeight: "600", fontSize: "14px" }}
+        >
+          Price
+        </Typography>
+        <TextField
+          margin="normal"
+          id="price"
+          size="small"
+          value={price}
+          sx={{ width: "50%", ml: "89px" }}
+          onChange={handlePriceChange}
+        />
+      </div>
       <div style={{ display: "flex" }}>
         <Typography
           sx={{ mt: 2 }}
