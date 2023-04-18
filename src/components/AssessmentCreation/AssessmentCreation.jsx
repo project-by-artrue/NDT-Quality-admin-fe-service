@@ -40,7 +40,8 @@ export default function AssessmentCreation() {
   const [totalScore, setTotalScore] = React.useState();
   const [assessmentTitle, setAssessmentTitle] = React.useState("");
   const [assessmentNote, setAssessmentNote] = React.useState("");
-  const [price, setPrice] = React.useState(0);
+  const [time, setTime] = React.useState()
+  const [price, setPrice] = React.useState();
   const [live, setLive] = React.useState(false);
   const [subscription, setSubscription] = React.useState(false);
   const [assessmentQuestion, setassessmentQuestion] = React.useState([]);
@@ -49,7 +50,6 @@ export default function AssessmentCreation() {
     { data: createAssesmentData, error: createAssessmentError, isLoading },
   ] = useMutation(CREATE_ASSESSMENT);
   const [assessments, setAssessments] = React.useState([]);
-  console.log("🚀 ~ file: AssessmentCreation.jsx:52 ~ AssessmentCreation ~ assessments:", assessments)
   const {
     data: allAssessmentData,
     loading,
@@ -71,8 +71,15 @@ export default function AssessmentCreation() {
     setAssessmentTitle("");
     setassessmentQuestion([]);
     setAssessmentNote("");
+    setPrice("")
+    setTime("")
+    setSubscription("false")
     setOpenDialog(false);
   };
+
+  const handleTime = (event) => {
+    setTime(event.target.value)
+  }
 
   function readFile(file) {
     return new Promise((resolve, reject) => {
@@ -135,7 +142,7 @@ export default function AssessmentCreation() {
               question: obj.questionInstruction,
               options: optionsArray,
               marks: obj.mark,
-              answer: [{ identifier: `${obj.correctAnswer}`.toLowerCase() }],
+              answer: [{ identifier: `${obj.answer}`.toLowerCase() }],
             });
           }
         }
@@ -182,6 +189,10 @@ export default function AssessmentCreation() {
       toast.error("Assessment Question must be selected");
       return;
     }
+    if (time.length === 0) {
+      toast.error("Time filed must not be empty");
+      return;
+    }
     if (assessmentNote.length === 0) {
       toast.error("Extra document filed must not be empty");
       return;
@@ -194,8 +205,9 @@ export default function AssessmentCreation() {
           notes: assessmentNote,
           score: totalScore,
           totalQuestions: assessmentQuestion.length,
-          assessmentFees: price,
-          isAssessmentFree: subscription
+          assessmentFees: Number(price),
+          isAssessmentFree: subscription,
+          timeLimitInMinute: Number(time)
         }
       },
     });
@@ -279,7 +291,6 @@ export default function AssessmentCreation() {
         )
       );
     });
-    console.log("8520", rows);
     setAssessments(rows);
   }, [allAssessmentData]);
 
@@ -351,6 +362,22 @@ export default function AssessmentCreation() {
           size="small"
           value={assessmentNote}
           onChange={handleExtraDocChange}
+        />
+      </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Typography
+          sx={{ mt: 2 }}
+          style={{ color: "#000000", fontWeight: "600", fontSize: "14px" }}
+        >
+          Time
+        </Typography>
+        <TextField
+          margin="normal"
+          id="time"
+          size="small"
+          value={time}
+          sx={{ width: "50%", ml: "89px" }}
+          onChange={handleTime}
         />
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
