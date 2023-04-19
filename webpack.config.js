@@ -12,8 +12,8 @@ module.exports = {
     },
     // webpack 5 comes with devServer which loads in development mode
     devServer: {
-        port: 3010,
-        historyApiFallback: true,
+        port: 5010, // you can change the port
+        allowedHosts: ['admin.ndtandquality.com']
     },
     resolve: {
         alias: {
