@@ -160,7 +160,7 @@ export default function MainDrawer() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {['Dashboard', 'Assessment', 'Users', 'System Settings', 'PDF Creation'].map((text, index) => (
+                    {['Dashboard', 'Assessment', 'Users', 'System Settings', 'Document Listing'].map((text, index) => (
                         <ListItem
                             key={text}
                             disablePadding sx={{ display: 'block' }}
@@ -231,7 +231,7 @@ export default function MainDrawer() {
                             return <User />
                         case 'System Settings':
                             return <SystemSetting />
-                        case 'PDF Creation':
+                        case 'Document Listing':
                             return <DocumentListing />
                         default:
                             return <AssessmentCreation />
