@@ -45,8 +45,7 @@ export default function Dropdown({items, setSelection, selectedItem}) {
             target: { value },
         } = event;
         setSelection(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
+            value,
         );
     };
 
