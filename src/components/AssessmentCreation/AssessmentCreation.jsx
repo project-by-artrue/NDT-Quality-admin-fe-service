@@ -40,9 +40,9 @@ const style = {
 export default function AssessmentCreation() {
   const [totalScore, setTotalScore] = React.useState();
   const [assessmentTitle, setAssessmentTitle] = React.useState("");
-  const [assessmentNote, setAssessmentNote] = React.useState("");
-  const [time, setTime] = React.useState()
-  const [price, setPrice] = React.useState();
+  const [time, setTime] = React.useState('')
+  const [price, setPrice] = React.useState('');
+  var numbers = /^[0-9]+$/;
   // const [promoCode, setPromoCode] = React.useState("");
   const [live, setLive] = React.useState(false);
   const [editorData, setEditorData] = useState('');
@@ -71,22 +71,23 @@ export default function AssessmentCreation() {
   const handleDialogOpen = () => {
     setAssessmentTitle("");
     setassessmentQuestion([]);
-    setAssessmentNote("");
     setOpenDialog(true);
   };
 
   const handleDialogClose = () => {
     setAssessmentTitle("");
     setassessmentQuestion([]);
-    setAssessmentNote("");
     setPrice("")
     setTime("")
-    setSubscription("false")
+    setSubscription(false)
+    setLive(false)
     setOpenDialog(false);
   };
 
-  const handleTime = (event) => {
-    setTime(event.target.value)
+  const handleTime = (e) => {
+    if (e.target.value.match(numbers) || e.target.value === "") {
+      setTime(e.target.value)
+    }
   }
 
   function readFile(file) {
@@ -168,8 +169,10 @@ export default function AssessmentCreation() {
     setAssessmentTitle(event.target.value);
   }
 
-  function handlePriceChange(event) {
-    setPrice(event.target.value);
+  function handlePriceChange(e) {
+    if (e.target.value.match(numbers) || e.target.value === "") {
+      setPrice(e.target.value);
+    }
   }
 
   // function handlePromocodeChange(event) {
@@ -177,7 +180,7 @@ export default function AssessmentCreation() {
   // }
 
   function handleExtraDocChange(event) {
-    setAssessmentNote(event.target.value);
+    (event.target.value);
   }
 
   function handleLiveChange(event) {
@@ -222,8 +225,18 @@ export default function AssessmentCreation() {
           timeLimitInMinute: Number(time)
         }
       },
-    });
-    handleDialogClose()
+    }).then((data) => {
+      handleDialogClose()
+      if (data) {
+        toast.success("Assessment successfully created!")
+        setAssessmentTitle("")
+        setTime("")
+        setTotalScore()
+        setDocumentId("")
+        setLive(false)
+        setSubscription(false)
+      }
+    })
   }
 
   const columns = [
@@ -277,7 +290,6 @@ export default function AssessmentCreation() {
     if (createAssesmentData || createAssessmentError) {
       setAssessmentTitle("");
       setassessmentQuestion([]);
-      setAssessmentNote("");
     }
   }, [createAssesmentData, createAssessmentError]);
 
@@ -376,11 +388,11 @@ export default function AssessmentCreation() {
           margin="normal"
           id="extra_doc"
           size="small"
-          value={assessmentNote}
+          value={}
           onChange={handleExtraDocChange}
         />
       </div> */}
-      <Dropdown 
+      <Dropdown
         items={allDocumentsData?.getAllDocuments}
         setSelection={setDocumentId}
         selectedItem={documentId}
@@ -487,6 +499,6 @@ export default function AssessmentCreation() {
         <SearchBar />
       </CreateButton>
       <DataTable rows={assessments} columns={columns} />
-      </>
+    </>
   );
 }
