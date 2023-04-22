@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -27,6 +28,7 @@ import AssessmentCreation from '../AssessmentCreation/AssessmentCreation';
 import Dashboard from '../Dashboard/Dashboard';
 import User from '../User/User';
 import SystemSetting from "../SystemSetting/SystemSetting"
+import DocumentListing from "../DocumentListing/DocumentListing"
 
 const drawerWidth = 240;
 
@@ -126,7 +128,7 @@ export default function MainDrawer() {
         }
     }
 
-    const IconsArray = [<DashboardIcon />, <AssessmentIcon />, <GroupIcon />, <SettingsSuggestIcon />]
+    const IconsArray = [<DashboardIcon />, <AssessmentIcon />, <GroupIcon />, <SettingsSuggestIcon />, <NoteAddIcon />]
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -158,7 +160,7 @@ export default function MainDrawer() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {['Dashboard', 'Assessment', 'Users', 'System Settings'].map((text, index) => (
+                    {['Dashboard', 'Assessment', 'Users', 'System Settings', 'PDF Creation'].map((text, index) => (
                         <ListItem
                             key={text}
                             disablePadding sx={{ display: 'block' }}
@@ -229,6 +231,8 @@ export default function MainDrawer() {
                             return <User />
                         case 'System Settings':
                             return <SystemSetting />
+                        case 'PDF Creation':
+                            return <DocumentListing />
                         default:
                             return <AssessmentCreation />
                     }

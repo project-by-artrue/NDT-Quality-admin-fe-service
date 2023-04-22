@@ -17,10 +17,11 @@ import DataTable from "../DataTable/DataTable";
 import { useEffect, useState } from "react";
 import { read } from "xlsx";
 import { useMutation, useQuery } from "@apollo/client";
-import { CREATE_ASSESSMENT, LOAD_ASSESSMENTS } from "../../query";
+import { CREATE_ASSESSMENT, LOAD_ASSESSMENTS, LOAD_DOCUMENTS } from "../../query";
 import { ModelHeader } from "../MainDrawer/MainDrawer.styles";
 import MenuData from "../MenuData/Menudata";
 import { toast } from "react-toastify";
+import Dropdown from "../Dropdown/Dropdown";
 
 const style = {
   position: "absolute",
@@ -42,7 +43,9 @@ export default function AssessmentCreation() {
   const [assessmentNote, setAssessmentNote] = React.useState("");
   const [time, setTime] = React.useState()
   const [price, setPrice] = React.useState();
+  // const [promoCode, setPromoCode] = React.useState("");
   const [live, setLive] = React.useState(false);
+  const [editorData, setEditorData] = useState('');
   const [subscription, setSubscription] = React.useState(false);
   const [assessmentQuestion, setassessmentQuestion] = React.useState([]);
   const [
@@ -50,11 +53,16 @@ export default function AssessmentCreation() {
     { data: createAssesmentData, error: createAssessmentError, isLoading },
   ] = useMutation(CREATE_ASSESSMENT);
   const [assessments, setAssessments] = React.useState([]);
+  const [documentId, setDocumentId] = React.useState('');
   const {
     data: allAssessmentData,
     loading,
     error,
   } = useQuery(LOAD_ASSESSMENTS);
+
+  const {
+    data: allDocumentsData,
+  } = useQuery(LOAD_DOCUMENTS);
 
   const [openDialog, setOpenDialog] = React.useState(false);
   const csvRef = React.useRef();
@@ -161,6 +169,11 @@ export default function AssessmentCreation() {
   function handlePriceChange(event) {
     setPrice(event.target.value);
   }
+
+  // function handlePromocodeChange(event) {
+  //   setPromoCode(event.target.value);
+  // }
+
   function handleExtraDocChange(event) {
     setAssessmentNote(event.target.value);
   }
@@ -193,16 +206,13 @@ export default function AssessmentCreation() {
       toast.error("Time filed must not be empty");
       return;
     }
-    if (assessmentNote.length === 0) {
-      toast.error("Extra document filed must not be empty");
-      return;
-    }
+
     await createAssessment({
       variables: {
         createAssessmentInput: {
           name: assessmentTitle,
           questions: assessmentQuestion,
-          notes: assessmentNote,
+          notes: documentId,
           score: totalScore,
           totalQuestions: assessmentQuestion.length,
           assessmentFees: Number(price),
@@ -294,6 +304,10 @@ export default function AssessmentCreation() {
     setAssessments(rows);
   }, [allAssessmentData]);
 
+  const changeEvent = (event) => {
+    console.log(event.editor.getData())
+  }
+
   const modalContent = (
     <Box sx={style}>
       <ModelHeader>
@@ -324,8 +338,8 @@ export default function AssessmentCreation() {
       />
       <Typography
         id="modal-modal-description"
-        sx={{ mt: 2 }}
-        style={{ color: "#000000", fontWeight: "600", fontSize: "14px" }}
+        sx={{ m: 2 }}
+        style={{ marginLeft: 0, color: "#000000", fontWeight: "600", fontSize: "14px" }}
       >
         Assignment csv
         <Button
@@ -348,7 +362,7 @@ export default function AssessmentCreation() {
           />
         </Button>
       </Typography>
-      <div style={{ display: "flex", alignItems: "center" }}>
+      {/* <div style={{ display: "flex", alignItems: "center" }}>
         <Typography
           sx={{ mt: 2 }}
           style={{ color: "#000000", fontWeight: "600", fontSize: "14px" }}
@@ -363,7 +377,12 @@ export default function AssessmentCreation() {
           value={assessmentNote}
           onChange={handleExtraDocChange}
         />
-      </div>
+      </div> */}
+      <Dropdown 
+        items={allDocumentsData?.getAllDocuments}
+        setSelection={setDocumentId}
+        selectedItem={documentId}
+      />
       <div style={{ display: "flex", alignItems: "center" }}>
         <Typography
           sx={{ mt: 2 }}
@@ -396,6 +415,22 @@ export default function AssessmentCreation() {
           onChange={handlePriceChange}
         />
       </div>
+      {/* <div style={{ display: "flex", alignItems: "center" }}>
+        <Typography
+          sx={{ mt: 2 }}
+          style={{ color: "#000000", fontWeight: "600", fontSize: "14px" }}
+        >
+        Promocode
+        </Typography>
+        <TextField
+          margin="normal"
+          id="promocode"
+          size="small"
+          value={promoCode}
+          sx={{ width: "50%", ml: "45px" }}
+          onChange={handlePromocodeChange}
+        />
+      </div> */}
       <div style={{ display: "flex" }}>
         <Typography
           sx={{ mt: 2 }}
@@ -450,6 +485,6 @@ export default function AssessmentCreation() {
         <SearchBar />
       </CreateButton>
       <DataTable rows={assessments} columns={columns} />
-    </>
+      </>
   );
 }

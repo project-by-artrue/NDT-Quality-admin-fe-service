@@ -22,11 +22,31 @@ export const LOAD_ASSESSMENTS = gql`
   }
 `;
 
+export const LOAD_DOCUMENTS = gql`
+  query getAllDocuments {
+    getAllDocuments {
+      _id 
+      name
+      content
+    }
+  }
+`;
+
 
 export const CREATE_ASSESSMENT = gql`
   mutation createAssessment($createAssessmentInput: CreateAssessmentInput!) {
     createAssessment(createAssessmentInput: $createAssessmentInput) {
       _id
+    }
+  }
+`;
+
+export const CREATE_DOCUMENT = gql`
+  mutation createDocument($createDocumentInput: CreateDocumentInput!) {
+    createDocument(createDocumentInput: $createDocumentInput) {
+      _id
+      name
+      content
     }
   }
 `;
