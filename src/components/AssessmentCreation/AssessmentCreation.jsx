@@ -151,6 +151,8 @@ export default function AssessmentCreation() {
               options: optionsArray,
               marks: obj.mark,
               answer: [{ identifier: `${obj.answer}`.toLowerCase() }],
+              category: obj.category,
+              subCategory: obj.subCategory,
             });
           }
         }
