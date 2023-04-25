@@ -48,6 +48,7 @@ export default function AssessmentCreation() {
   const [editorData, setEditorData] = useState('');
   const [subscription, setSubscription] = React.useState(false);
   const [assessmentQuestion, setassessmentQuestion] = React.useState([]);
+  const [updateButton, setUpdateButton] = React.useState(false)
   const [
     createAssessment,
     { data: createAssesmentData, error: createAssessmentError, isLoading },
@@ -64,14 +65,33 @@ export default function AssessmentCreation() {
     data: allDocumentsData,
   } = useQuery(LOAD_DOCUMENTS);
 
+  
   const [openDialog, setOpenDialog] = React.useState(false);
   const csvRef = React.useRef();
   const docRef = React.useRef();
 
-  const handleDialogOpen = () => {
-    setAssessmentTitle("");
-    setassessmentQuestion([]);
+  const handleDialogOpen = ({ name }, id, setAnchorEl) => {
     setOpenDialog(true);
+    if (name === "Edit") {
+      setAnchorEl(null);
+      setOpenDialog(true);
+      setUpdateButton(true);
+      const newValue = allAssessmentData?.getAllAssessments.find(
+        (assessment) => assessment._id === String(id)
+      );
+
+      setAssessmentTitle(newValue.name);
+      setAssessmentNote(newValue.notes);
+      setPrice(newValue.assessmentFees);
+      setSubscription(newValue.isAssessmentFree);
+      setTotalScore(newValue.score);
+      setTime(newValue.timeLimitInMinute);
+    } else if (name === "Review") {
+      setOpenDialog(false);
+      setAssessmentTitle("");
+      setassessmentQuestion([]);
+      // TODO Review
+    }
   };
 
   const handleDialogClose = () => {
@@ -282,7 +302,7 @@ export default function AssessmentCreation() {
   ];
 
   function createData(name, id, score, totalQuestion, createAt) {
-    const more = <MenuData optionList={optionList} />;
+    const more = <MenuData id={id} handleDialogOpen={handleDialogOpen}  optionList={optionList} />;
     return { name, id, score, totalQuestion, createAt, action: more };
   }
 
@@ -468,16 +488,25 @@ export default function AssessmentCreation() {
         </Typography>
       </div>
 
-      <Button
+    { updateButton ? (<Button
+        variant="contained"
+        color="primary"
+        style={{ alignSelf: "end" }}
+        // onClick={}
+      >
+        Update
+      </Button>):
+     (<Button
         variant="contained"
         color="primary"
         style={{ alignSelf: "end" }}
         onClick={handleAssessmentCreate}
       >
         Submit
-      </Button>
+      </Button>) }
     </Box>
   );
+  
   return (
     <>
       <HeaderWrapper>

@@ -12,12 +12,17 @@ export const LOAD_QUESTION_BY_ASSESSMENT = gql`
 export const LOAD_ASSESSMENTS = gql`
   query getAllAssessments {
     getAllAssessments {
-      _id 
+      _id
       name
-      notes
       score
-      createdAt
       totalQuestions
+      assessmentFees
+      timeLimitInMinute
+      isAssessmentFree
+      notes
+      createdAt
+      updatedAt
+      metaData
     }
   }
 `;
@@ -50,3 +55,22 @@ export const CREATE_DOCUMENT = gql`
     }
   }
 `;
+
+
+export const GET_ALL_DOCUMENTS = gql`
+  query getAllDocuments {
+    getAllDocuments {
+       _id
+      name
+      content
+    }
+  }
+`
+
+export const UPDATE_DOCUMENT = gql`
+  mutation updateDocument($updateDocumentInput: UpdateDocumentInput!){
+    updateDocument(updateDocumentInput: $updateDocumentInput){
+      name
+    }
+  }
+`
