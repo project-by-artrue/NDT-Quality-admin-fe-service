@@ -19,11 +19,11 @@ const HeaderWrapper = styled.div`
     }
 `;
 const DocumentSumary = styled.div`
-display: flex;
 height: 200px;
 border: 1px solid #d1d1d1;
 margin-top:8px;
 margin-bottom:8px;
+overflow: auto;
 
 `;
 

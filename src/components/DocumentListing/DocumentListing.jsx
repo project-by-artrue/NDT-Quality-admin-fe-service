@@ -16,20 +16,22 @@ export default function DocumentListing(props) {
   const [initialContent, setInitialContent] = useState("")
   const [isEdit, setIsEdit] = useState(false)
   const [allAssessmentNotes, setAllAssessmentNotes] = useState([])
+    const [rerenderkey, setRerenderKey] = useState(Math.random().toString());
   const [
     createDocument,
     { data: createDocumentData, error: createDocumentError, isLoading },
   ] = useMutation(CREATE_DOCUMENT);
+
   const changeEvent = (event) => {
-    const dataHtlm = event.editor.getData()
-    setContent(String(dataHtlm))
+    const dataHtml = event.editor.getData()
+    setContent(String(dataHtml))
   }
+
   const {
     data: assessmentNotesData,
     loading,
     error,
   } = useQuery(GET_ALL_DOCUMENTS);
-
 
   useEffect(() => {
     if (assessmentNotesData?.getAllDocuments.length > 0) {
@@ -86,8 +88,10 @@ export default function DocumentListing(props) {
       const note = assessmentNotesData?.getAllDocuments.find((assessmentNote) => assessmentNote._id === String(id))
       setNoteId(note?._id)
       setTitle(note?.name)
-      setInitialContent(note?.content)
+    setContent(note?.content)
+        setRerenderKey(Math.random().toString());
     }
+     
 
   }
 
@@ -123,8 +127,6 @@ export default function DocumentListing(props) {
       }
     })
   }
-
-
   return (
     <>
       <HeaderWrapper>
@@ -158,8 +160,9 @@ export default function DocumentListing(props) {
           onChange={(e) => setTitle(e.target.value)}
         />
         <CKEditor
-          initData={initialContent}
-          data={initialContent ? "<p>02020202020</p>" : "jay"}
+        key={rerenderkey}
+          initData={content}
+          data={content}
           config={{
             extraPlugins: [
               'justify',

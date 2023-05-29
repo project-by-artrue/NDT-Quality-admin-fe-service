@@ -160,7 +160,7 @@ export default function MainDrawer() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {['Dashboard', 'Assessment', 'Users', 'System Settings', 'Document Listing'].map((text, index) => (
+                    {['Assessment', 'Document Listing'].map((text, index) => (
                         <ListItem
                             key={text}
                             disablePadding sx={{ display: 'block' }}
@@ -223,14 +223,14 @@ export default function MainDrawer() {
                 <DrawerHeader />
                 {(() => {
                     switch (option) {
-                        case 'Dashboard':
-                            return <Dashboard />
+                        // case 'Dashboard':
+                        //     return <Dashboard />
                         case 'Assessment':
                             return <AssessmentCreation />
-                        case 'Users':
-                            return <User />
-                        case 'System Settings':
-                            return <SystemSetting />
+                        // case 'Users':
+                        //     return <User />
+                        // case 'System Settings':
+                        //     return <SystemSetting />
                         case 'Document Listing':
                             return <DocumentListing />
                         default:
