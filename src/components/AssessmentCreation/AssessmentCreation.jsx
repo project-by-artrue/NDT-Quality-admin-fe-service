@@ -102,7 +102,7 @@ export default function AssessmentCreation() {
       setAnchorEl(null);
       setOpenDialog(true);
       setUpdateButton(true);
-      const newValue = allAssessmentData?.getAllAssessments.find(
+      const newValue = allAssessmentData?.getAllAssessmentsForAdmin.find(
         (assessment) => assessment._id === String(id)
       );
       setAssessmentId(newValue._id);
