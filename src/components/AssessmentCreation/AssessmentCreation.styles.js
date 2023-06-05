@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 const CreateButton = styled.div`
     border-radius: 8px;
-    margin: 24px 0;
     padding: 8px;
     justify-content: space-between;
     display: flex;

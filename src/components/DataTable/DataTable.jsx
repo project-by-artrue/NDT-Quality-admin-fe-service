@@ -22,9 +22,9 @@ export default function StickyHeadTable({ columns, rows }) {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
-    console.log(rows)
+
     return (
-        <Paper sx={{ width: '100%', overflow: 'hidden', border: "1px solid #d1d1d1"}}>
+        <Paper sx={{ width: '100%', overflow: 'hidden', border: "1px solid #d1d1d1" }}>
             <TableContainer sx={{ maxHeight: 440 }}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
@@ -45,7 +45,7 @@ export default function StickyHeadTable({ columns, rows }) {
                             ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row) => {
                                 return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={row}>
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                         {columns.map((column) => {
                                             const value = row[column.id];
                                             return (

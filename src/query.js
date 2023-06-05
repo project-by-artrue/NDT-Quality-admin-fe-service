@@ -19,7 +19,31 @@ export const LOAD_ASSESSMENTS = gql`
       assessmentFees
       timeLimitInMinute
       isAssessmentFree
+      isAssessmentLive
+      isDemoAssessment
       notes
+      icon
+      createdAt
+      updatedAt
+      metaData
+    }
+  }
+`;
+
+export const LOAD_ASSESSMENTS_ADMIN = gql`
+  query getAllAssessmentsForAdmin {
+    getAllAssessmentsForAdmin {
+      _id
+      name
+      score
+      totalQuestions
+      assessmentFees
+      timeLimitInMinute
+      isAssessmentFree
+      isAssessmentLive
+      isDemoAssessment
+      notes
+      icon
       createdAt
       updatedAt
       metaData
@@ -44,6 +68,22 @@ export const CREATE_ASSESSMENT = gql`
       _id
     }
   }
+`;
+
+export const UPDATE_ASSESSMENT = gql`
+  mutation updateAssessment($id: String!, $updateAssessmentInput: UpdateAssessmentInput!){
+    updateAssessment(id: $id, updateAssessmentInput: $updateAssessmentInput){
+      name
+    }
+  }
+`;
+
+export const DELETE_ASSESSMENT = gql`
+  mutation deleteAssessment($assessmentId: String!){
+    deleteByAssessmentId(assessmentId: $assessmentId){
+      name
+	}
+}
 `;
 
 export const CREATE_DOCUMENT = gql`
@@ -74,3 +114,25 @@ export const UPDATE_DOCUMENT = gql`
     }
   }
 `
+
+export const GET_ALL_USERS = gql`
+query getAllUser{
+	getAllUser{
+    _id
+    firstName
+    email
+    lastName
+    birthDate
+    state
+    country
+    pinCode
+    subscribedAssessment
+    completedAssessment{
+      assessmentId
+      completedAt
+      markObtain
+      totalMark
+    }
+  }
+}
+`;

@@ -8,30 +8,36 @@ import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_DOCUMENT, GET_ALL_DOCUMENTS, UPDATE_DOCUMENT } from "../../query";
 import DataTable from "../DataTable/DataTable";
 import MenuData from "../MenuData/Menudata";
+import { toast } from "react-toastify";
 
 export default function DocumentListing(props) {
   const [noteId, setNoteId] = useState("")
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
-  const [initialContent, setInitialContent] = useState("")
-  const [isEdit, setIsEdit] = useState(false)
-  const [allAssessmentNotes, setAllAssessmentNotes] = useState([])
-    const [rerenderkey, setRerenderKey] = useState(Math.random().toString());
+  const [isEdit, setIsEdit] = useState(false);
+  const [allAssessmentNotes, setAllAssessmentNotes] = useState([]);
+  const [rerenderkey, setRerenderKey] = useState(Math.random().toString());
   const [
     createDocument,
     { data: createDocumentData, error: createDocumentError, isLoading },
   ] = useMutation(CREATE_DOCUMENT);
 
-  const changeEvent = (event) => {
-    const dataHtml = event.editor.getData()
-    setContent(String(dataHtml))
-  }
-
   const {
     data: assessmentNotesData,
     loading,
     error,
+    refetch
   } = useQuery(GET_ALL_DOCUMENTS);
+
+  const [
+    updateDocument,
+    { data: updateNoteData, error: updateAssessmentNoteError, isLoading: loadUpdateAssessmentNote },
+  ] = useMutation(UPDATE_DOCUMENT);
+
+  const changeEvent = (event) => {
+    const dataHtml = event.editor.getData()
+    setContent(String(dataHtml))
+  }
 
   useEffect(() => {
     if (assessmentNotesData?.getAllDocuments.length > 0) {
@@ -53,12 +59,22 @@ export default function DocumentListing(props) {
 
   }, [assessmentNotesData])
 
-  const [
-    updateDocument,
-    { data: updateNoteData, error: updateAssessmentNoteError, isLoading: loadUpdateAssessmentNote },
-  ] = useMutation(UPDATE_DOCUMENT);
+  useEffect(() => {
+    if (createDocumentData || createDocumentError || updateNoteData || updateAssessmentNoteError) {
+      refetch();
+    }
+  }, [createDocumentData, createDocumentError, updateNoteData, updateAssessmentNoteError, refetch]);
 
   const handleCreateDocument = async () => {
+
+    if (!title && !content) {
+      toast.error("Please enter Assessment name.");
+    }
+
+    if (!content) {
+      toast.error("Please enter the content.");
+    }
+
     await createDocument({
       variables: {
         createDocumentInput: {
@@ -66,9 +82,35 @@ export default function DocumentListing(props) {
           content,
         }
       }
+    }).then((data) => {
+      if (data) {
+        toast.success("Document successfully created!")
+      }
+      setTitle('');
+      setContent('');
     })
   }
 
+  const handleEditDocument = async () => {
+    await updateDocument({
+      variables: {
+        updateDocumentInput: {
+          id: String(noteId),
+          name: title,
+          content: content,
+        }
+      }
+    }).then(({ data }) => {
+
+      if (data) {
+        toast.success("Document updated successfully!")
+        setTitle("")
+        setContent("")
+        setNoteId("")
+        setRerenderKey(Math.random().toString())
+      }
+    })
+  }
   const columns = [
     { id: "name", label: "Assessment Name", minWidth: 170 },
     { id: "id", label: "Assessment Id", minWidth: 170 },
@@ -88,19 +130,19 @@ export default function DocumentListing(props) {
       const note = assessmentNotesData?.getAllDocuments.find((assessmentNote) => assessmentNote._id === String(id))
       setNoteId(note?._id)
       setTitle(note?.name)
-    setContent(note?.content)
-        setRerenderKey(Math.random().toString());
+      setContent(note?.content)
+      setRerenderKey(Math.random().toString());
     }
-     
+
 
   }
 
   const optionList = [
     {
-      name: "Review",
+      name: "Edit",
     },
     {
-      name: "Edit",
+      name: "Delete",
     },
   ];
 
@@ -109,28 +151,11 @@ export default function DocumentListing(props) {
     const more = <MenuData id={id} handleDialogOpen={handleDialogOpen} optionList={optionList} />;
     return { name, id, action: more };
   }
-  const handleEditDocument = async () => {
-    await updateDocument({
-      variables: {
-        updateDocumentInput: {
-          id: String(noteId) ,
-          name: title,
-          content: content,
-        }
-      }
-    }).then(({ data }) => {
-      console.log("data");
-      if (data) {
-        setTitle("")
-        setContent("")
-        setNoteId("")
-      }
-    })
-  }
+
   return (
     <>
       <HeaderWrapper>
-        {!isEdit ? <h2>Add Document</h2> : <h2>Edit Document</h2>}
+        {!isEdit ? <h4>Add Document</h4> : <h4>Edit Document</h4>}
         {!isEdit ? <Button
           className="create-button"
           variant="contained"
@@ -160,7 +185,7 @@ export default function DocumentListing(props) {
           onChange={(e) => setTitle(e.target.value)}
         />
         <CKEditor
-        key={rerenderkey}
+          key={rerenderkey}
           initData={content}
           data={content}
           config={{
