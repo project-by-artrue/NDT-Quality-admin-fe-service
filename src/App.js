@@ -9,8 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  // uri: "https://api.ndtandquality.com/graphql",
-  uri: "http://localhost:3000/graphql",
+  uri: "https://api.ndtandquality.com/graphql",
+  // uri: "http://localhost:3000/graphql",
 });
 const App = () => {
   return (
