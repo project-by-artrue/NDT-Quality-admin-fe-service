@@ -114,7 +114,7 @@ export default function AssessmentCreation() {
       setAssessmentImage(newValue.icon);
       setLive(newValue.isAssessmentLive);
       setDemoAssessment(newValue.isDemoAssessment);
-      console.log(newValue)
+     
     } else if (name === "Delete") {
       setAnchorEl(null);
       setOpenDialog(false);
@@ -284,6 +284,11 @@ export default function AssessmentCreation() {
 
   async function handleAssessmentUpdate() {
 
+    if (assessmentTitle === "") {
+      toast.error("Assessment Name must not be empty");
+      return;
+    }
+    
     await updateAssessment(
       {
         variables: {
