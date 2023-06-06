@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { HeaderWrapper, ModelHeader, BottomLine } from "./User.styles";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_ALL_USERS, LOAD_ASSESSMENTS_ADMIN } from "../../query";
+import { GET_ALL_USERS, LOAD_ASSESSMENTS_ADMIN, UPDATE_USERSUBSCRIPTION } from "../../query";
 import DataTable from "../DataTable/DataTable";
 import MenuData from "../MenuData/Menudata";
 import Box from "@mui/material/Box";
@@ -12,6 +12,7 @@ import DropdownAssessment from "../Dropdown/DropdownAssessment";
 import DialogBox from "../DialogBox/DialogBox";
 import Typography from "@mui/material/Typography";
 import Loader from "../Loader/Loader";
+import { toast } from "react-toastify";
 
 
 const style = {
@@ -34,6 +35,7 @@ export default function User() {
     const [assessmentId, setAssessmentId] = useState([]);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [userId, setUserId] = useState('');
 
     const {
         data: usersData,
@@ -45,6 +47,11 @@ export default function User() {
         data: allAssessmentData,
         loading,
     } = useQuery(LOAD_ASSESSMENTS_ADMIN);
+
+    const [
+        updateUser,
+        {data: updateUserData, error: updateUserError, updateLoading}
+     ] = useMutation(UPDATE_USERSUBSCRIPTION);
 
     useEffect(() => {
         if (usersData?.getAllUser?.length > 0) {
@@ -105,6 +112,7 @@ export default function User() {
             const newValue = usersData?.getAllUser.find(
                 (user) => user._id === String(id)
             );
+            setUserId(newValue._id);
             setFirstName(newValue.firstName);
             setLastName(newValue.lastName);
             setAssessmentId(newValue.subscribedAssessment);
@@ -115,8 +123,24 @@ export default function User() {
         setOpenDialog(false);
     };
 
-    const handleUserUpdate = () => {
+    async function handleUserUpdate() {
 
+        await updateUser(
+            {
+                variables: {
+                    updateUserViaAdminInput: {
+                        id: String(userId),
+                        subscribedAssessment: assessmentId,
+                    }
+                }
+            }).then((data) => {
+                handleDialogClose()
+                if (data) {
+                    toast.success("User Assessment updated successfully.")
+                    setUserId('')
+                    setAssessmentId('')
+                }
+            })
     }
 
     const optionList = [
@@ -130,6 +154,8 @@ export default function User() {
         const more = <MenuData id={id} handleDialogOpen={handleDialogOpen} optionList={optionList} />;
         return { id, firstname, lastname, email, birthdate, state, country, pincode, action: more };
     }
+
+    const assessementTitle = allAssessmentData?.getAllAssessmentsForAdmin?.filter(current => assessmentId.includes(current?._id))?.map(curdata => curdata?.name);
 
     const modalContent = (
         <Box sx={style}>
@@ -172,6 +198,7 @@ export default function User() {
                         items={allAssessmentData?.getAllAssessmentsForAdmin}
                         setSelection={setAssessmentId}
                         selectedItem={assessmentId}
+                        itemsTitle={assessementTitle}
                     />
                 </div>
             </div>

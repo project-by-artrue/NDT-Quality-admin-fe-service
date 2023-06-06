@@ -136,3 +136,13 @@ query getAllUser{
   }
 }
 `;
+
+export const UPDATE_USERSUBSCRIPTION = gql`
+  mutation updateUserViaAdmin($updateUserViaAdminInput : UpdateUserViaAdminInput!){
+  updateUserViaAdmin(updateUserViaAdminInput: $updateUserViaAdminInput)
+  {
+  	_id
+    subscribedAssessment
+  }
+}
+`;
