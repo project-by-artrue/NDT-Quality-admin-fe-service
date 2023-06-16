@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 import Dropdown from "../Dropdown/Dropdown";
 import { Search } from '@mui/icons-material';
 import Loader from "../Loader/Loader";
+import ImageUpload from "../ImageUpload";
 
 const style = {
   position: "absolute",
@@ -44,7 +45,8 @@ export default function AssessmentCreation() {
   const [assessmentTitle, setAssessmentTitle] = React.useState("");
   const [assessmentImage, setAssessmentImage] = React.useState("");
   const [time, setTime] = React.useState('')
-  const [price, setPrice] = React.useState('');
+  const [priceInr, setPriceInr] = React.useState('');
+  const [priceUsd, setPriceUsd] = React.useState('');
   var numbers = /^[0-9]+$/;
   // const [promoCode, setPromoCode] = React.useState("");
   const [live, setLive] = React.useState(false);
@@ -107,7 +109,8 @@ export default function AssessmentCreation() {
       );
       setAssessmentId(newValue._id);
       setAssessmentTitle(newValue.name);
-      setPrice(newValue.assessmentFees);
+      setPriceInr(newValue.assessmentFees[0].amount);
+      setPriceUsd(newValue.assessmentFees[1].amount);
       setSubscription(newValue.isAssessmentFree);
       setTime(newValue.timeLimitInMinute);
       setDocumentId(newValue.notes);
@@ -131,7 +134,8 @@ export default function AssessmentCreation() {
   const handleDialogClose = () => {
     setAssessmentTitle("");
     setassessmentQuestion([]);
-    setPrice("");
+    setPriceInr("");
+    setPriceUsd("");
     setTime("");
     setSubscription(false);
     setLive(false);
@@ -229,9 +233,15 @@ export default function AssessmentCreation() {
     setAssessmentImage(event.target.value);
   }
 
-  function handlePriceChange(e) {
+  function handlePriceChangeInr(e) {
     if (e.target.value.match(numbers) || e.target.value === "") {
-      setPrice(e.target.value);
+      setPriceInr(e.target.value);
+    }
+  }
+
+  function handlePriceChangeUsd(e) {
+    if (e.target.value.match(numbers) || e.target.value === "") {
+      setPriceUsd(e.target.value);
     }
   }
 
@@ -288,7 +298,7 @@ export default function AssessmentCreation() {
       toast.error("Assessment Name must not be empty");
       return;
     }
-    
+
     await updateAssessment(
       {
         variables: {
@@ -296,7 +306,7 @@ export default function AssessmentCreation() {
           updateAssessmentInput: {
             name: assessmentTitle,
             notes: documentId,
-            assessmentFees: Number(price),
+            assessmentFees: [{ amount: Number(priceInr), currencyType: "INR" }, { amount: Number(priceUsd), currencyType: "USD" }],
             isAssessmentFree: subscription,
             timeLimitInMinute: Number(time),
             icon: assessmentImage,
@@ -343,7 +353,7 @@ export default function AssessmentCreation() {
           notes: documentId,
           score: totalScore,
           totalQuestions: assessmentQuestion.length,
-          assessmentFees: Number(price),
+          assessmentFees: [{ amount: Number(priceInr), currencyType: "INR" }, { amount: Number(priceUsd), currencyType: "USD" }],
           isAssessmentFree: subscription,
           timeLimitInMinute: Number(time),
           icon: assessmentImage,
@@ -544,20 +554,34 @@ export default function AssessmentCreation() {
           onChange={handleTime}
         />
       </div>
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <Typography
           sx={{ mt: 2 }}
           style={{ color: "#000000", fontWeight: "600", fontSize: "14px" }}
         >
-          Price
+          Price(INR)
         </Typography>
         <TextField
           margin="normal"
           id="price"
           size="small"
-          value={price}
-          sx={{ width: "50%", ml: "40px" }}
-          onChange={handlePriceChange}
+          value={priceInr}
+          sx={{ width: "50%", ml: "10px" }}
+          onChange={handlePriceChangeInr}
+        />
+        <Typography
+          sx={{ mt: 2 }}
+          style={{ color: "#000000", fontWeight: "600", fontSize: "14px" }}
+        >
+          Price(USD)
+        </Typography>
+        <TextField
+          margin="normal"
+          id="price"
+          size="small"
+          value={priceUsd}
+          sx={{ width: "50%", ml: "10px" }}
+          onChange={handlePriceChangeUsd}
         />
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -651,6 +675,7 @@ export default function AssessmentCreation() {
     <>
       {assessmentLoading ? (<Loader assessmentLoading={assessmentLoading} />) : (
         <>
+          {/* <ImageUpload/> */}
           <HeaderWrapper>
             <h4>Assessments List</h4>
             <Button

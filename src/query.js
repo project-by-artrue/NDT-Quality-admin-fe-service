@@ -16,7 +16,10 @@ export const LOAD_ASSESSMENTS = gql`
       name
       score
       totalQuestions
-      assessmentFees
+      assessmentFees {
+        amount
+        currencyType  
+      }
       timeLimitInMinute
       isAssessmentFree
       isAssessmentLive
@@ -37,7 +40,10 @@ export const LOAD_ASSESSMENTS_ADMIN = gql`
       name
       score
       totalQuestions
-      assessmentFees
+      assessmentFees {
+        amount
+        currencyType  
+      }
       timeLimitInMinute
       isAssessmentFree
       isAssessmentLive
@@ -133,6 +139,7 @@ query getAllUser{
       markObtain
       totalMark
     }
+    createdAt
   }
 }
 `;

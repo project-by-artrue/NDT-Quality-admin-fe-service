@@ -25,9 +25,25 @@ const BottomLine = styled.div`
     margin-top: 10px;
     border: 1px solid #C4CFD4;
 `;
+const CreateButton = styled.div`
+    border-radius: 8px;
+    padding: 8px;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    background: rgba(248, 250, 251, 1);
+    .MuiInputBase-root {
+        border-radius: 8px;
+    }
+    input {
+        height: 40px;
+        box-sizing: border-box;
+    }
+`;
 
 export {
     HeaderWrapper,
     ModelHeader,
-    BottomLine
+    BottomLine,
+    CreateButton
 }

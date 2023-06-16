@@ -7,12 +7,21 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { TableSortLabel } from '@mui/material';
 
 
 export default function StickyHeadTable({ columns, rows }) {
-
+    const [sortConfig, setSortConfig] = React.useState({ key: null, direction: null });
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+    const handleSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -22,7 +31,6 @@ export default function StickyHeadTable({ columns, rows }) {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
-
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden', border: "1px solid #d1d1d1" }}>
             <TableContainer sx={{ maxHeight: 440 }}>
@@ -35,7 +43,7 @@ export default function StickyHeadTable({ columns, rows }) {
                                     align={column.align}
                                     style={{ minWidth: column.minWidth }}
                                 >
-                                    {column.label}
+                                        {column.label}
                                 </TableCell>
                             ))}
                         </TableRow>
