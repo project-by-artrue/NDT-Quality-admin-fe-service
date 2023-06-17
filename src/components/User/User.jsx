@@ -38,7 +38,7 @@ export default function User() {
     const [lastName, setLastName] = useState('');
     const [userId, setUserId] = useState('');
     const [name, setName] = useState('');
-    const [sortType, setSortType] = useState('ASC'); 
+    const [sortType, setSortType] = useState('ASC');
     const [sortField, setSortField] = useState("")
     const {
         data: usersData,
@@ -51,14 +51,14 @@ export default function User() {
         loading,
     } = useQuery(LOAD_ASSESSMENTS_ADMIN);
 
-    const handleChangeField =(e)=> {
+    const handleChangeField = (e) => {
         setSortField(e.target.value)
     }
 
     const [
         updateUser,
-        {data: updateUserData, error: updateUserError, updateLoading}
-     ] = useMutation(UPDATE_USERSUBSCRIPTION);
+        { data: updateUserData, error: updateUserError, updateLoading }
+    ] = useMutation(UPDATE_USERSUBSCRIPTION);
 
     const sort = (data) => {
 
@@ -93,9 +93,9 @@ export default function User() {
         });
         setAllUserData(rows)
     }
-    const handleSort = (e) =>{
+    const handleSort = (e) => {
         const data = [...usersData?.getAllUser]
-        if(sortField === "date"){
+        if (sortField === "date") {
             if (sortType === "ASC") {
                 data.sort(function (a, b) {
                     return new Date(a.createdAt) - new Date(b.createdAt);
@@ -108,7 +108,7 @@ export default function User() {
                 sort(data)
             }
         }
-        if (sortField === "name"){
+        if (sortField === "name") {
             if (sortType === "ASC") {
                 data.sort(function (a, b) {
                     return a.firstName.localeCompare(b.firstName)
@@ -121,14 +121,14 @@ export default function User() {
                 sort(data)
             }
         }
-        
+
     }
-    useEffect(()=>{
-        if (sortField.length > 0){
+    useEffect(() => {
+        if (sortField.length > 0) {
             handleSort()
         }
-    },[sortField,sortType])
-   
+    }, [sortField, sortType])
+
     useEffect(() => {
         if (usersData?.getAllUser?.length > 0) {
 
@@ -326,15 +326,15 @@ export default function User() {
                             )
                         }}
                     />
-                    <div style={{display:"flex", justifyItems:"center", alignItems:"center", gap:"10px", cursor:"pointer"}} >
-                        <div style={{border : "1px solid black", padding:"0px 3px", borderRadius:"10px"}} onClick={handleChangeSortType}>
-                            {sortType === "ASC" ? <div style={{ width: "30px"}}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <div style={{ display: "flex", justifyItems: "center", alignItems: "center", gap: "10px", cursor: "pointer" }} >
+                        <div style={{ border: "1px solid black", padding: "0px 3px", borderRadius: "10px" }} onClick={handleChangeSortType}>
+                            {sortType === "ASC" ? <div style={{ display: "flex", width: "30px" }}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 19.5v-15m0 0l-6.75 6.75M12 4.5l6.75 6.75" />
                             </svg>
-                            </div> : <div style={{ width: "30px" }}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            </div> : <div style={{ width: "30px", display: "flex", }}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" />
                             </svg>
-                        </div>}
+                            </div>}
                         </div>
                         <Select
                             name="country"
@@ -342,11 +342,11 @@ export default function User() {
                             onChange={handleChangeField}
                             displayEmpty
                             fullWidth
-                            sx={{height:"40px"}}
+                            sx={{ height: "40px" }}
                             inputProps={{ 'aria-label': 'Without label' }}
                         >
                             <MenuItem disabled value="">
-                               Select Sort Field
+                                Select Sort Field
                             </MenuItem>
                             <MenuItem value="name" selected>Name</MenuItem>
                             <MenuItem value="date" selected>Date</MenuItem>
