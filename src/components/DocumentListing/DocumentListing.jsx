@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { CKEditor } from 'ckeditor4-react';
 import { TextField } from "@mui/material";
-import { useCKEditor } from 'ckeditor4-react';
 import { DocumentContainer, HeaderWrapper, DocumentSumary } from "./DocumentListing.styles";
 import Button from "@mui/material/Button";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_DOCUMENT, GET_ALL_DOCUMENTS, UPDATE_DOCUMENT } from "../../query";
 import DataTable from "../DataTable/DataTable";
+import ClipboardCopy from "../ClipBoardCopy/ClipboardCopy";
 import MenuData from "../MenuData/Menudata";
 import { toast } from "react-toastify";
 
@@ -184,6 +184,7 @@ export default function DocumentListing(props) {
           size="small"
           onChange={(e) => setTitle(e.target.value)}
         />
+        <ClipboardCopy />
         <CKEditor
           key={rerenderkey}
           initData={content}
