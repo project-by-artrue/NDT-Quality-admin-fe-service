@@ -53,7 +53,7 @@ export default function AssessmentCreation() {
   const [assessmentId, setAssessmentId] = useState('');
   const [subscription, setSubscription] = React.useState(false);
   const [demoAssessment, setDemoAssessment] = React.useState(false);
-  const [assessmentQuestion, setassessmentQuestion] = React.useState([]);
+  const [assessmentQuestion, setAssessmentQuestion] = React.useState([]);
   const [updateButton, setUpdateButton] = React.useState(false);
   const [editButton, setEditButton] = React.useState(false);
   const [
@@ -109,8 +109,8 @@ export default function AssessmentCreation() {
       );
       setAssessmentId(newValue._id);
       setAssessmentTitle(newValue.name);
-      setPriceInr(newValue.assessmentFees[0].amount);
-      setPriceUsd(newValue.assessmentFees[1].amount);
+      setPriceInr(newValue.assessmentFees[0]?.amount);
+      setPriceUsd(newValue.assessmentFees[1]?.amount);
       setSubscription(newValue.isAssessmentFree);
       setTime(newValue.timeLimitInMinute);
       setDocumentId(newValue.notes);
@@ -133,7 +133,7 @@ export default function AssessmentCreation() {
 
   const handleDialogClose = () => {
     setAssessmentTitle("");
-    setassessmentQuestion([]);
+    setAssessmentQuestion([]);
     setPriceInr("");
     setPriceUsd("");
     setTime("");
@@ -217,7 +217,7 @@ export default function AssessmentCreation() {
             });
           }
         }
-        setassessmentQuestion(questionsArray);
+        setAssessmentQuestion(questionsArray);
         setTotalScore(totalScore);
       })
       .catch((error) => {
@@ -319,7 +319,7 @@ export default function AssessmentCreation() {
         if (data) {
           toast.success("Assessment updated successfully.")
           setAssessmentId("")
-          setssessmentTitle("")
+          setAssessmentTitle("")
           setTime("")
           setDocumentId("")
           setLive(false)
@@ -417,7 +417,7 @@ export default function AssessmentCreation() {
   useEffect(() => {
     if (createAssesmentData || createAssessmentError || updateAssessmentData || updateAssessmentError) {
       setAssessmentTitle("");
-      setassessmentQuestion([]);
+      setAssessmentQuestion([]);
       refetch();
     }
   }, [createAssesmentData, createAssessmentError, updateAssessmentData, updateAssessmentError]);
