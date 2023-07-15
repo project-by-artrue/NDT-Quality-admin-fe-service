@@ -206,7 +206,7 @@ export default function AssessmentCreation() {
                 }
               }
             }
-            totalScore += Number(obj.marks);
+            totalScore += Number(obj.marks??0);
             questionsArray.push({
               question: `${obj.questionInstruction}`.toString(),
               options: optionsArray,
@@ -312,6 +312,7 @@ export default function AssessmentCreation() {
             icon: assessmentImage,
             isAssessmentLive: live,
             isDemoAssessment: demoAssessment,
+
           }
         }
       }).then((data) => {
