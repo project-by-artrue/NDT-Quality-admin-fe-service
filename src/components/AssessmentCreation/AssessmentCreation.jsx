@@ -202,15 +202,15 @@ export default function AssessmentCreation() {
             for (let key in obj) {
               if (obj.hasOwnProperty(key)) {
                 if (key.startsWith('option')) {
-                  optionsArray.push({ value: obj[key], identifier: key });
+                  optionsArray.push({ value: `${obj[key]}`.toString(), identifier: key });
                 }
               }
             }
             totalScore += Number(obj.mark);
             questionsArray.push({
-              question: obj.questionInstruction,
+              question: `${obj.questionInstruction}`.toString(),
               options: optionsArray,
-              marks: obj.mark,
+              marks: obj.marks,
               answer: [{ identifier: `${obj.answer}`.toLowerCase() }],
               category: `${obj.category}`.toUpperCase(),
               subCategory: `${obj.subCategory}`.toUpperCase(),
