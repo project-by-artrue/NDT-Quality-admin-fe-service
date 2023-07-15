@@ -1,37 +1,57 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
+    context: __dirname,
+    entry: './src/index.js',
+    // Where files should be sent once they are bundled
     output: {
-        path: path.join(__dirname, "/dist"), // the bundle output path
-        filename: "bundle.js", // the name of the bundle
+        path: path.join(__dirname, 'dist'),
+        filename: 'index.bundle.[contenthash].js',
+        publicPath: '/',
+        clean: true,
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: "src/index.html", // to import index.html file inside index.js
-        }),
-    ],
+    // webpack 5 comes with devServer which loads in development mode
     devServer: {
-        port: 5001, // you can change the port
+        port: 5010, // you can change the port
+        historyApiFallback: true,
+        allowedHosts: ['admin.ndtandquality.com'],
     },
+    resolve: {
+        alias: {
+            components: path.resolve(__dirname, 'src/components'),
+            react: path.resolve('./node_modules/react'),
+        },
+        extensions: ['.js', '.jsx'],
+    },
+    // Rules of how webpack will take our files, complie & bundle them for the browser 
     module: {
         rules: [
             {
-                test: /\.(js|jsx)$/, // .js and .jsx files
-                exclude: /node_modules/, // excluding the node_modules folder
+                test: /\.(js|jsx)$/,
+                exclude: /nodeModules/,
                 use: {
-                    loader: "babel-loader",
-                },
+                    loader: 'babel-loader'
+                }
             },
             {
-                test: /\.(sa|sc|c)ss$/, // styles files
-                use: ["style-loader", "css-loader", "sass-loader"],
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
             },
             {
-                test: /\.(png|woff|woff2|eot|ttf|svg)$/, // to import images and fonts
+                test: /\.(png|woff|woff2|eot|ttf|svg|gif)$/, // to import images and fonts
                 loader: "url-loader",
                 options: { limit: false },
             },
-        ],
+            {
+                test: /\.(png|jpe?g|gif)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                    },
+                ],
+            },
+        ]
     },
-};
+    plugins: [new HtmlWebpackPlugin({ template: './src/index.html', favicon: './public/favicon.png' })],
+}
