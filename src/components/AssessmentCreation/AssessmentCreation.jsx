@@ -206,7 +206,7 @@ export default function AssessmentCreation() {
                 }
               }
             }
-            totalScore += Number(obj.mark);
+            totalScore += Number(obj.marks);
             questionsArray.push({
               question: `${obj.questionInstruction}`.toString(),
               options: optionsArray,
