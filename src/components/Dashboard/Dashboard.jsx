@@ -3,7 +3,7 @@ import { MainWrapper, LeftContent, RightContent, LeftImg, LeftItem } from "./Das
 
 export default function Dashboard() {
 
-    const [set, doneset] = useState(["Dashboard", "Assement", "Users", "System Setting"]);
+    const [set, doneset] = useState(["Dashboard", "Assement", "Users", "System Setting", "Completed Sessions"]);
     return (
         <>
             <MainWrapper>

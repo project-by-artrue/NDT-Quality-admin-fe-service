@@ -153,3 +153,18 @@ export const UPDATE_USERSUBSCRIPTION = gql`
   }
 }
 `;
+
+export const GetAllUserAssessmentSession = gql`
+query getUserAssessmentSession{
+  getUserAssessmentSession{
+    firstName
+    lastName
+    assessmentName
+    assessmentId
+    completedAt
+    markObtain
+    totalMark
+  }
+}
+
+`;
