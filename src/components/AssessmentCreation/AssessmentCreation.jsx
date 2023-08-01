@@ -117,16 +117,15 @@ export default function AssessmentCreation() {
       setAssessmentImage(newValue.icon);
       setLive(newValue.isAssessmentLive);
       setDemoAssessment(newValue.isDemoAssessment);
-     
+
     } else if (name === "Delete") {
       setAnchorEl(null);
       setOpenDialog(false);
       // TODO Review
-      const newValue = allAssessmentData?.getAllAssessments.find(
+      const deleteAssessmentID = allAssessmentData?.getAllAssessmentsForAdmin?.find(
         (assessment) => assessment._id === String(id)
-      );
-      setAssessmentId(newValue._id);
-      handleAssessmentDelete();
+      )._id;
+      handleAssessmentDelete(deleteAssessmentID);
 
     }
   }
@@ -206,7 +205,7 @@ export default function AssessmentCreation() {
                 }
               }
             }
-            totalScore += Number(obj.marks??0);
+            totalScore += Number(obj.marks ?? 0);
             questionsArray.push({
               question: `${obj.questionInstruction}`.toString(),
               options: optionsArray,
@@ -277,20 +276,21 @@ export default function AssessmentCreation() {
     }
   }
 
-  // async function handleAssessmentDelete() {
+  async function handleAssessmentDelete(deleteAssessmentID) {
 
-  //   await deleteByAssessmentId(
-  //     {
-  //       variables: {
-  //         assessmentId: String(assessmentId),
-  //       }
-  //     }).then((data) => {
-  //       handleDialogClose()
-  //       if (data) {
-  //         toast.success("Assessment Deleted successfully.")
-  //       }
-  //     })
-  // }
+    await deleteByAssessmentId(
+      {
+        variables: {
+          assessmentId: String(deleteAssessmentID),
+        }
+      }).then((data) => {
+        handleDialogClose()
+        if (data) {
+          toast.success("Assessment Deleted successfully.")
+          refetch();
+        }
+      })
+  }
 
   async function handleAssessmentUpdate() {
 
@@ -407,6 +407,9 @@ export default function AssessmentCreation() {
   const optionList = [
     {
       name: "Edit",
+    },
+    {
+      name: "Delete",
     },
   ];
 

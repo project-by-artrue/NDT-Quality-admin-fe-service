@@ -39,8 +39,8 @@ export default function MenuData(props) {
           return (
             <MenuItem
               key={option.name}
-              onClick={ () => props.handleDialogOpen(option,props.id,setAnchorEl)}
-            >       
+              onClick={() => props.handleDialogOpen(option, props.id, setAnchorEl)}
+            >
               {option.name}
             </MenuItem>
           );

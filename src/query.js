@@ -85,10 +85,8 @@ export const UPDATE_ASSESSMENT = gql`
 `;
 
 export const DELETE_ASSESSMENT = gql`
-  mutation deleteAssessment($assessmentId: String!){
-    deleteByAssessmentId(assessmentId: $assessmentId){
-      name
-	}
+  mutation deleteByAssessmentId($assessmentId: String!){
+    deleteByAssessmentId(assessmentId: $assessmentId)
 }
 `;
 
